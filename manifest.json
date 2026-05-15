@@ -1,0 +1,25 @@
+{
+  "name": "美股选股器",
+  "short_name": "选股器",
+  "description": "五阶段漏斗选股系统 - 技术面/基本面/社交热度/13F/退场信号",
+  "start_url": "/screener.html",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#161b22",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "investing"],
+  "lang": "zh-CN"
+}
