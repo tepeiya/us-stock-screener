@@ -114,7 +114,7 @@
   <div class="tab" data-tab="calendar" onclick="switchTab('calendar')">📅 事件</div>
   <div class="tab" data-tab="funds" onclick="switchTab('funds')">🏛️ 13F</div>
   <div class="tab" data-tab="heatmap" onclick="switchTab('heatmap')">🔥 热度</div>
-  <div class="tab" data-tab="market" onclick="switchTab('market')">📈 板块</div>
+  <div class="tab" data-tab="market" onclick="switchTab('market')">🏢 板块</div>
 </div>
 
 <!-- ======== Filter Chips ======== -->
@@ -502,32 +502,134 @@ function renderHeatmap() {
 }
 
 // ============================================================
-// TAB 6: 板块表现
+// TAB 6: 板块（升级版：板块分类+各板块下股票+排行榜）
 // ============================================================
 function renderMarket() {
   const emojis = ['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟','11'];
-  let html = `<div class="section-title">📈 11大板块表现（近1月排序）</div>`;
   
+  // 按板块分组
+  const sectorGroups = {};
+  stockList.forEach(s => {
+    if (!sectorGroups[s.sector]) sectorGroups[s.sector] = [];
+    sectorGroups[s.sector].push(s);
+  });
+  
+  // 板块表现映射
+  const perfMap = {};
+  SECTOR_PERFORMANCE.forEach(p => { perfMap[p.name] = p; });
+  
+  let html = `<div class="section-title">📈 板块分类 <span class="badge">${Object.keys(sectorGroups).length}个板块</span></div>`;
+  
+  // 板块快速导航
+  html += `<div class="filter-bar" style="flex-wrap:wrap; padding-bottom:4px">`;
+  Object.keys(sectorGroups).sort().forEach(sec => {
+    const perf = perfMap[sec];
+    const rank = perf ? perf.rank : 99;
+    const emoji = rank <= 3 ? ['🥇','🥈','🥉'][rank-1] : '';
+    const color = perf && perf.change.includes('+') ? '#3fb950' : '#f85149';
+    html += `<div class="filter-chip" onclick="document.getElementById('sector-${sec}').scrollIntoView({behavior:'smooth'})" style="background:rgba(88,166,255,0.1);border-color:#58a6ff;color:#58a6ff">
+      ${emoji} ${sec} (${sectorGroups[sec].length})
+    </div>`;
+  });
+  html += `<div class="filter-chip" onclick="document.getElementById('sector-ranking').scrollIntoView({behavior:'smooth'})" style="background:rgba(210,153,34,0.1);border-color:#d29922;color:#d29922">
+    🏆 板块排行
+  </div>`;
+  html += `</div>`;
+  
+  // 各板块股票
+  Object.keys(sectorGroups).sort((a,b) => {
+    const pa = perfMap[a]; const pb = perfMap[b];
+    return (pa ? pa.rank : 99) - (pb ? pb.rank : 99);
+  }).forEach(sec => {
+    const stocks = sectorGroups[sec].sort((a,b) => b.comp - a.comp);
+    const perf = perfMap[sec];
+    const rank = perf ? perf.rank : '-';
+    const rankEmoji = rank <= 3 ? ['🥇','🥈','🥉'][rank-1] : `#${rank}`;
+    const color = perf && perf.change.includes('+') ? '#3fb950' : '#f85149';
+    
+    html += `<div class="section-title" id="sector-${sec}" style="padding-top:12px">
+      ${rankEmoji} ${sec} <span class="badge">${stocks.length}只</span>
+      ${perf ? `<span style="font-size:12px; color:${color}; margin-left:8px">${perf.change} · 1月${perf.month}</span>` : ''}
+    </div>`;
+    
+    // 板块Finviz链接
+    const finvizSector = sec === '科技' ? 'Technology' : 
+                         sec === '消费防御' ? 'Consumer Defensive' :
+                         sec === '金融' ? 'Financial' :
+                         sec === '能源' ? 'Energy' : sec;
+    html += `<div style="padding:0 12px 4px">
+      <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="window.open('https://finviz.com/groups.ashx?g=sector&v=141&t=PER&o=-perf4w','_blank')">🔗 Finviz板块页面 →</span>
+    </div>`;
+    
+    // 板块概览卡片
+    if (perf) {
+      html += `<div class="card" style="margin-bottom:4px">
+        <div style="display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:#8b949e">
+          <span>今日 <strong style="color:${color}">${perf.change}</strong></span>
+          <span>近1周 <strong style="color:#e6edf3">${perf.week}</strong></span>
+          <span>近1月 <strong style="color:#e6edf3">${perf.month}</strong></span>
+          <span>近1季 <strong style="color:#e6edf3">${perf.quarter}</strong></span>
+          <span>YTD <strong style="color:#e6edf3">${perf.ytd}</strong></span>
+        </div>
+      </div>`;
+    }
+    
+    // 该板块下的股票卡片（精简版）
+    stocks.forEach((s, i) => {
+      const optFlow = s.option_flow ? `<span style="font-size:11px; color:#f97316">🔥 ${s.option_flow.substring(0,20)}</span>` : '';
+      const exitWarn = s.exit && s.exit.status !== '持有' ? `<span class="tag warn" style="font-size:10px">⚠️</span>` : '';
+      
+      html += `<div class="stock-card" onclick="showDetail('${s.ticker}')" style="margin-bottom:2px">
+        <div class="stock-top" style="padding:8px 12px 4px">
+          <div class="stock-info">
+            <div class="stock-rank rank-default" style="width:20px;height:20px;font-size:10px">${i+1}</div>
+            <div>
+              <div class="stock-ticker" style="font-size:14px">${s.ticker} <span class="stock-name" style="font-size:11px">${s.name}</span></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="position-badge position-${s.position}" style="font-size:10px">${positionLabel(s.position)}</span>
+            ${exitWarn}
+            <div class="stock-change change-${s.change >= 0 ? 'up' : 'down'}" style="font-size:12px">${s.change >= 0 ? '+' : ''}${s.change.toFixed(2)}%</div>
+          </div>
+        </div>
+        <div style="padding:2px 12px 8px; display:flex; gap:8px; font-size:11px; color:var(--text-secondary)">
+          <span>综合 ${s.comp.toFixed(1)}</span>
+          <span>热度 ${s.heat}/10 ${fires(s.heat)}</span>
+          <span>${stars(s.tech)}</span>
+          ${optFlow}
+          <span style="margin-left:auto; color:#58a6ff; font-size:11px" onclick="event.stopPropagation();window.open('https://finviz.com/quote.ashx?t=${s.ticker}','_blank')">📈</span>
+        </div>
+      </div>`;
+    });
+  });
+  
+  // 板块排行总表
+  html += `<div class="section-title" id="sector-ranking" style="padding-top:16px">🏆 11大板块排名</div>`;
   SECTOR_PERFORMANCE.forEach((sec, i) => {
-    html += `<div class="card">
-      <div class="card-header">
+    html += `<div class="card" style="margin-bottom:2px">
+      <div class="card-header" style="margin-bottom:2px">
         <span class="card-title">${emojis[i] || ''} ${sec.name}</span>
-        <span class="card-score" style="color:${sec.change.includes('+') ? '#3fb950' : '#f85149'}">${sec.change}</span>
+        <span class="card-score" style="color:${sec.change.includes('+') ? '#3fb950' : '#f85149'};font-size:14px">${sec.change}</span>
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:#8b949e">
-        <span>近1周 <strong style="color:#e6edf3">${sec.week}</strong></span>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; font-size:11px; color:#8b949e">
         <span>近1月 <strong style="color:#e6edf3">${sec.month}</strong></span>
         <span>近1季 <strong style="color:#e6edf3">${sec.quarter}</strong></span>
         <span>YTD <strong style="color:#e6edf3">${sec.ytd}</strong></span>
+        <span style="margin-left:auto">
+          <span style="color:#58a6ff;cursor:pointer" onclick="event.stopPropagation();window.open('https://finviz.com/groups.ashx?g=sector&t=PER&o=-perf4w','_blank')">Finviz→</span>
+        </span>
       </div>
     </div>`;
   });
   
+  // 策略建议
+  const techPerf = SECTOR_PERFORMANCE[0];
   html += `<div class="section-title">💡 板块轮动策略</div>
   <div class="card" style="font-size:12px">
-    <div class="stock-catalyst" style="margin-bottom:6px">🥇 聚焦科技板块（1月+14.9%, 1季+22.8%）</div>
-    <div class="stock-catalyst" style="margin-bottom:6px; border-left-color:#d29922">🥈 消费防御作为避风港（1月+5%稳健）</div>
-    <div class="stock-catalyst" style="border-left-color:#f97316">🥉 能源板块YTD+31.3%但已偏高，谨慎追高</div>
+    <div class="stock-catalyst" style="margin-bottom:6px">🥇 科技板块强势（1月+${techPerf.month}），AI驱动不变</div>
+    <div class="stock-catalyst" style="margin-bottom:6px; border-left-color:#d29922">🥈 消费防御震荡上行，适合稳健配置</div>
+    <div class="stock-catalyst" style="border-left-color:#f97316">🥉 能源YTD+31%但已高位，注意油价回调风险</div>
   </div>`;
   
   document.getElementById('resultsContent').innerHTML = html;
