@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>美股选股器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ======== Header ======== -->
+<header class="app-header">
+  <div class="app-title">
+    <span class="icon">📊</span>
+    <span>美股选股器</span>
+  </div>
+  <div class="app-subtitle">五阶段漏斗 · 技术+基本面+社交热度 · 综合评分+仓位建议</div>
+</header>
+
+<!-- ======== Tab Bar ======== -->
+<div class="tab-bar" id="tabBar">
+  <div class="tab active" data-tab="results" onclick="switchTab('results')">📋 选股结果</div>
+  <div class="tab" data-tab="heatmap" onclick="switchTab('heatmap')">🔥 热度排行</div>
+  <div class="tab" data-tab="market" onclick="switchTab('market')">📈 板块表现</div>
+  <div class="tab" data-tab="sources" onclick="switchTab('sources')">👥 30个来源</div>
+</div>
+
+<!-- ======== Filter Chips ======== -->
+<div class="filter-bar" id="filterBar">
+  <div class="filter-chip active" data-filter="all" onclick="applyFilter('all')">🏆 全部</div>
+  <div class="filter-chip" data-filter="core" onclick="applyFilter('core')">🏛️ 核心</div>
+  <div class="filter-chip" data-filter="watch" onclick="applyFilter('watch')">👀 观察</div>
+  <div class="filter-chip" data-filter="light" onclick="applyFilter('light')">⚡ 轻仓</div>
+  <div class="filter-chip" data-filter="tech" onclick="applyFilter('tech')">🔬 科技</div>
+  <div class="filter-chip" data-filter="defensive" onclick="applyFilter('defensive')">🛡️ 消费防御</div>
+  <div class="filter-chip" data-filter="financial" onclick="applyFilter('financial')">🏦 金融</div>
+  <div class="filter-chip" data-filter="energy" onclick="applyFilter('energy')">⛽ 能源</div>
+</div>
+
+<!-- ======== Content Area ======== -->
+<div id="contentArea">
+  <div class="loading" id="loadingIndicator">
+    <div class="spinner"></div>
+    <div>正在分析市场数据...</div>
+  </div>
+  <div id="resultsContent" style="display:none"></div>
+</div>
+
+<!-- ======== Bottom Buttons ======== -->
+<div class="btn-group">
+  <button class="btn btn-secondary" onclick="showSources()">👥 热度来源</button>
+  <button class="btn btn-secondary" onclick="randomStock()">🎲 随机一只</button>
+  <button class="btn btn-primary" onclick="runScreener()">🔄 重新筛选</button>
+</div>
+
+<div class="disclaimer">
+  ⚠️ 以上内容仅供参考，不构成投资建议。数据基于Finviz + 30个社交热度来源综合分析。
+</div>
+
+<script src="data.js"></script>
+<script>
+// ========================================
+// 美股选股器 - 主程序
+// ========================================
+
+let currentFilter = 'all';
+let currentTab = 'results';
+let stockList = [];
+let selectedStock = null;
+
+// ---- 初始化 ----
+function init() {
+  stockList = Object.values(STOCK_DATABASE);
+  // 按综合分排序
+  stockList.sort((a, b) => b.comp - a.comp);
+  
+  setTimeout(() => {
+    document.getElementById('loadingIndicator').style.display = 'none';
+    renderResults();
+  }, 500);
+}
+
+// ---- Tab 切换 ----
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+  
+  document.getElementById('filterBar').style.display = (tab === 'results') ? 'flex' : 'none';
+  
+  const content = document.getElementById('resultsContent');
+  content.style.display = 'block';
+  
+  switch(tab) {
+    case 'results': renderResults(); break;
+    case 'heatmap': renderHeatmap(); break;
+    case 'market': renderMarket(); break;
+    case 'sources': renderSources(); break;
+  }
+}
+
+// ---- 筛选 ----
+function applyFilter(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.filter-chip[data-filter="${filter}"]`).classList.add('active');
+  renderResults();
+}
+
+function getFilteredStocks() {
+  let list = [...stockList];
+  
+  switch(currentFilter) {
+    case 'core': list = list.filter(s => s.position === 'core'); break;
+    case 'watch': list = list.filter(s => s.position === 'watch'); break;
+    case 'light': list = list.filter(s => s.position === 'light'); break;
+    case 'tech': list = list.filter(s => s.sector === '科技'); break;
+    case 'defensive': list = list.filter(s => s.sector === '消费防御'); break;
+    case 'financial': list = list.filter(s => s.sector === '金融'); break;
+    case 'energy': list = list.filter(s => s.sector === '能源'); break;
+  }
+  return list;
+}
+
+// ---- 渲染主结果列表 ----
+function renderResults() {
+  const list = getFilteredStocks();
+  const container = document.getElementById('resultsContent');
+  
+  let html = '';
+  
+  // 顶部统计
+  html += `<div class="section-title">📋 选股结果 <span class="badge">${list.length}只</span></div>`;
+  
+  // 跑赢大市 Banner
+  const topSector = SECTOR_PERFORMANCE[0];
+  html += `
+    <div class="sector-banner">
+      <div class="sector-name">🥇 最热板块：${topSector.name}</div>
+      <div class="sector-stats">
+        <span class="sector-stat">近1月 <strong>${topSector.month}</strong></span>
+        <span class="sector-stat">近1季 <strong>${topSector.quarter}</strong></span>
+        <span class="sector-stat">YTD <strong>${topSector.ytd}</strong></span>
+        <span class="sector-stat">今日 <strong style="color:#3fb950">${topSector.change}</strong></span>
+      </div>
+    </div>`;
+  
+  // 股票卡片
+  list.forEach((s, i) => {
+    const rank = i + 1;
+    const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-default';
+    const compPct = (s.comp / 5 * 100).toFixed(0);
+    
+    html += `
+    <div class="stock-card" onclick="showDetail('${s.ticker}')">
+      <div class="stock-top">
+        <div class="stock-info">
+          <div class="stock-rank ${rankClass}">${rank}</div>
+          <div>
+            <div class="stock-ticker">${s.ticker} <span class="stock-name">${s.name}</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="stock-change change-${s.change >= 0 ? 'up' : 'down'}">${s.change >= 0 ? '+' : ''}${s.change.toFixed(2)}%</div>
+        </div>
+      </div>
+      
+      <div class="stock-meta">
+        <span class="tag sector">${s.sector}</span>
+        <span class="tag ${s.comp >= 4.5 ? 'score-high' : s.comp >= 4.0 ? 'score-mid' : 'score-low'}">
+          ${s.comp.toFixed(1)}分 ${stars(s.tech)}
+        </span>
+        <span class="position-badge position-${s.position}">${positionLabel(s.position)}</span>
+      </div>
+      
+      <div class="stock-body">
+        <div class="stock-grid">
+          <div class="metric">
+            <div class="metric-label">技术面</div>
+            <div class="metric-value">${stars(s.tech)}</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">基本面</div>
+            <div class="metric-value">${stars(s.fund)}</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">社交热度</div>
+            <div class="metric-value heat-high">${s.heat}/10 ${fires(s.heat)}</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">综合评分</div>
+            <div class="metric-value" style="color:${scoreColor(s.comp)}">${s.comp.toFixed(1)}</div>
+          </div>
+        </div>
+        
+        <div class="stock-catalyst">💡 ${s.description}</div>
+        <div class="stock-risk">⚠️ ${s.risk}</div>
+      </div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+// ---- 热度排行 ----
+function renderHeatmap() {
+  const heatSorted = [...stockList].sort((a, b) => b.heat - a.heat);
+  const container = document.getElementById('resultsContent');
+  
+  let html = `<div class="section-title">🔥 社交热度排行 <span class="badge">30个来源</span></div>`;
+  
+  heatSorted.forEach((s, i) => {
+    const barWidth = (s.heat / 10 * 100).toFixed(0);
+    html += `
+    <div class="card" onclick="showDetail('${s.ticker}')">
+      <div class="card-header">
+        <span class="card-title">#${i+1} ${s.ticker} ${s.name}</span>
+        <span class="card-score" style="color:${s.heat >= 8 ? '#f97316' : '#d29922'}">${s.heat}/10 ${fires(s.heat)}</span>
+      </div>
+      <div class="score-bar">
+        <div class="score-bar-track">
+          <div class="score-bar-fill" style="width:${barWidth}%; background:${s.heat >= 8 ? '#f97316' : '#d29922'}"></div>
+        </div>
+      </div>
+      <div class="info-row"><span class="label">综合评分</span><span class="value">${s.comp.toFixed(1)} ${stars(s.tech)}</span></div>
+      <div class="info-row"><span class="label">催化剂</span><span class="value">${s.description}</span></div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+// ---- 板块表现 ----
+function renderMarket() {
+  const container = document.getElementById('resultsContent');
+  
+  let html = `<div class="section-title">📈 11大板块表现（近1月排序）</div>`;
+  
+  SECTOR_PERFORMANCE.forEach((sec, i) => {
+    const rankEmoji = ['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣'];
+    html += `
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">${rankEmoji[i] || '  '} ${sec.name}</span>
+        <span class="card-score" style="color:${sec.change.includes('+') ? '#3fb950' : '#f85149'}">${sec.change}</span>
+      </div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; font-size:12px; color:#8b949e">
+        <span>近1周 <strong style="color:#e6edf3">${sec.week}</strong></span>
+        <span>近1月 <strong style="color:#e6edf3">${sec.month}</strong></span>
+        <span>近1季 <strong style="color:#e6edf3">${sec.quarter}</strong></span>
+        <span>YTD <strong style="color:#e6edf3">${sec.ytd}</strong></span>
+      </div>
+    </div>`;
+  });
+  
+  // 板块资金流向建议
+  html += `
+  <div class="section-title">💡 板块轮动策略</div>
+  <div class="card">
+    <div class="stock-catalyst" style="margin-bottom:8px">🥇 聚焦科技板块（1月+14.9%, 1季+22.8%）</div>
+    <div class="stock-catalyst" style="margin-bottom:8px; border-left-color:#d29922">🥈 消费防御作为避风港（1月+5%稳健）</div>
+    <div class="stock-catalyst" style="border-left-color:#f97316">🥉 能源板块YTD+31.3%但已偏高，谨慎追高</div>
+  </div>`;
+  
+  container.innerHTML = html;
+}
+
+// ---- 30个来源展示 ----
+function renderSources() {
+  const container = document.getElementById('resultsContent');
+  
+  let html = `<div class="section-title">👥 社交热度 · 30个来源</div>`;
+  
+  const groups = [
+    { key: 'macro', title: '📊 宏观与策略大师', weight: '2x' },
+    { key: 'trading', title: '📈 实战交易与技术分析', weight: '1.5x' },
+    { key: 'deep', title: '🧠 深度研究与投资心理', weight: '1.5x' },
+    { key: 'whales', title: '🏛️ 基金大佬本人', weight: '3x' },
+    { key: 'kol', title: '🎯 美股权威KOL', weight: '1.5x' },
+    { key: 'news', title: '📡 实时资讯与异动追踪', weight: '1x' },
+  ];
+  
+  groups.forEach(g => {
+    const accounts = SOURCES[g.key];
+    html += `
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">${g.title}</span>
+        <span style="font-size:11px; color:#8b949e">权重 ${g.weight}</span>
+      </div>
+      ${accounts.map(a => `
+        <div class="info-row">
+          <span class="label">${a.name}</span>
+          <span class="value" style="color:#58a6ff">${a.handle}</span>
+        </div>
+      `).join('')}
+      <div style="font-size:11px; color:#6e7681; margin-top:4px">共${accounts.length}个来源</div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+// ---- 个股详情 ----
+function showDetail(ticker) {
+  selectedStock = ticker;
+  const s = STOCK_DATABASE[ticker];
+  if (!s) return;
+  
+  const compPct = (s.comp / 5 * 100).toFixed(0);
+  
+  const detailHtml = `
+  <div class="section-title">🔍 ${s.ticker} ${s.name} 详细分析</div>
+  
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">${s.ticker} · ${s.sector} · ${s.industry}</span>
+      <span class="card-score" style="color:${scoreColor(s.comp)}">${s.comp.toFixed(1)} ${stars(s.tech)}</span>
+    </div>
+    <div class="score-bar">
+      <div class="score-bar-track"><div class="score-bar-fill" style="width:${compPct}%; background:${scoreColor(s.comp)}"></div></div>
+    </div>
+    <div class="position-badge position-${s.position}" style="margin:8px 0">${positionLabel(s.position)}</div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header"><span class="card-title">📊 五维评分</span></div>
+    <div class="info-row"><span class="label">技术面 (30%)</span><span class="value">${stars(s.tech)}</span></div>
+    <div class="score-bar"><div class="score-bar-track"><div class="score-bar-fill" style="width:${s.tech*20}%; background:#3fb950"></div></div></div>
+    
+    <div class="info-row"><span class="label">基本面 (30%)</span><span class="value">${stars(s.fund)}</span></div>
+    <div class="score-bar"><div class="score-bar-track"><div class="score-bar-fill" style="width:${s.fund*20}%; background:#58a6ff"></div></div></div>
+    
+    <div class="info-row"><span class="label">社交热度 (25%)</span><span class="value">${s.heat}/10 ${fires(s.heat)}</span></div>
+    <div class="score-bar"><div class="score-bar-track"><div class="score-bar-fill" style="width:${s.heat*10}%; background:#f97316"></div></div></div>
+    
+    <div class="info-row"><span class="label">催化剂 (15%)</span><span class="value">${'✓'.repeat(s.catalyst)}</span></div>
+    <div class="score-bar"><div class="score-bar-track"><div class="score-bar-fill" style="width:${s.catalyst*20}%; background:#bc8cff"></div></div></div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header"><span class="card-title">💡 催化剂</span></div>
+    <div class="stock-catalyst">${s.description}</div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header"><span class="card-title">⚠️ 风险提示</span></div>
+    <div class="stock-risk">${s.risk}</div>
+  </div>
+  
+  <div style="padding:8px 12px; text-align:center">
+    <button class="btn btn-secondary" onclick="renderResults()" style="display:inline-flex; width:auto">← 返回列表</button>
+  </div>`;
+  
+  document.getElementById('resultsContent').innerHTML = detailHtml;
+}
+
+// ---- 随机一只 ----
+function randomStock() {
+  const keys = Object.keys(STOCK_DATABASE);
+  const pick = keys[Math.floor(Math.random() * keys.length)];
+  showDetail(pick);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---- 显示来源 ----
+function showSources() {
+  switchTab('sources');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---- 重新筛选（模拟） ----
+function runScreener() {
+  document.getElementById('resultsContent').style.display = 'none';
+  document.getElementById('loadingIndicator').style.display = 'flex';
+  
+  setTimeout(() => {
+    document.getElementById('loadingIndicator').style.display = 'none';
+    document.getElementById('resultsContent').style.display = 'block';
+    // 轻微随机化排序模拟市场变化
+    stockList.sort((a, b) => (b.comp + Math.random()*0.1) - (a.comp + Math.random()*0.1));
+    renderResults();
+  }, 1200);
+}
+
+// ---- 启动 ----
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

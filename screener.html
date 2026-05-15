@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>美股选股器 v2</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="选股器">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="screener-style.css">
+  <style>
+    /* v2 新增样式 */
+    .exit-banner {
+      background: linear-gradient(135deg, #1a2332, #2d1b1b);
+      border: 1px solid #f85149;
+      margin: 0 12px 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+    .exit-banner.hold { border-color: #3fb950; background: linear-gradient(135deg, #1a2332, #1b2d1b); }
+    .exit-banner.warn { border-color: #d29922; background: linear-gradient(135deg, #1a2332, #2d2b1b); }
+    .calendar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin: 0 12px 4px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .calendar-date {
+      width: 50px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .calendar-date .day { font-size: 20px; font-weight: 700; }
+    .calendar-date .month { font-size: 11px; color: var(--text-muted); }
+    .calendar-info { flex: 1; }
+    .calendar-info .title { font-size: 13px; font-weight: 600; }
+    .calendar-info .desc { font-size: 11px; color: var(--text-secondary); }
+    .impact-badge {
+      font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;
+    }
+    .impact-high { background: rgba(248,81,73,0.2); color: #f85149; }
+    .impact-mid { background: rgba(210,153,34,0.2); color: #d29922; }
+    .impact-low { background: rgba(139,148,158,0.2); color: #8b949e; }
+    .impact-extreme { background: rgba(188,140,255,0.2); color: #bc8cff; }
+    .today-marker {
+      display: inline-block;
+      background: var(--accent-blue);
+      color: #fff;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-left: 6px;
+    }
+    .fund-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin: 0 12px 8px;
+      padding: 12px 14px;
+    }
+    .fund-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .fund-name { font-size: 14px; font-weight: 700; }
+    .fund-house { font-size: 11px; color: var(--text-muted); }
+    .fund-stock {
+      display: inline-block;
+      font-size: 12px;
+      background: rgba(63,185,80,0.15);
+      color: var(--accent-green);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin: 2px 4px 2px 0;
+    }
+    .fund-stock.sell {
+      background: rgba(248,81,73,0.15);
+      color: var(--accent-red);
+    }
+    .tag.buy { background: rgba(63,185,80,0.15); color: var(--accent-green); }
+    .tag.sell { background: rgba(248,81,73,0.15); color: var(--accent-red); }
+    .tag.hold { background: rgba(88,166,255,0.15); color: var(--accent-blue); }
+    .tag.warn { background: rgba(210,153,34,0.15); color: #d29922; }
+    .earnings-countdown {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ======== Header ======== -->
+<header class="app-header">
+  <div class="app-title">
+    <span class="icon">📊</span>
+    <span>美股选股器 <span style="font-size:12px; color:#58a6ff; background:rgba(88,166,255,0.15); padding:0 6px; border-radius:4px">v2</span></span>
+  </div>
+  <div class="app-subtitle">选股 → 买入 → 持有监控 → 退场信号</div>
+</header>
+
+<!-- ======== Tab Bar ======== -->
+<div class="tab-bar" id="tabBar">
+  <div class="tab active" data-tab="results" onclick="switchTab('results')">📋 选股</div>
+  <div class="tab" data-tab="holdings" onclick="switchTab('holdings')">🛡️ 退场</div>
+  <div class="tab" data-tab="calendar" onclick="switchTab('calendar')">📅 事件</div>
+  <div class="tab" data-tab="funds" onclick="switchTab('funds')">🏛️ 13F</div>
+  <div class="tab" data-tab="heatmap" onclick="switchTab('heatmap')">🔥 热度</div>
+  <div class="tab" data-tab="market" onclick="switchTab('market')">📈 板块</div>
+</div>
+
+<!-- ======== Filter Chips ======== -->
+<div class="filter-bar" id="filterBar">
+  <div class="filter-chip active" data-filter="all" onclick="applyFilter('all')">🏆 全部</div>
+  <div class="filter-chip" data-filter="core" onclick="applyFilter('core')">🏛️ 核心</div>
+  <div class="filter-chip" data-filter="watch" onclick="applyFilter('watch')">👀 观察</div>
+  <div class="filter-chip" data-filter="light" onclick="applyFilter('light')">⚡ 轻仓</div>
+  <div class="filter-chip" data-filter="exit_warn" onclick="applyFilter('exit_warn')">⚠️ 退场预警</div>
+  <div class="filter-chip" data-filter="earnings" onclick="applyFilter('earnings')">📅 财报临近</div>
+  <div class="filter-chip" data-filter="tech" onclick="applyFilter('tech')">🔬 科技</div>
+</div>
+
+<!-- ======== Content ======== -->
+<div id="contentArea">
+  <div class="loading" id="loadingIndicator">
+    <div class="spinner"></div>
+    <div>正在分析市场数据...</div>
+  </div>
+  <div id="resultsContent" style="display:none"></div>
+</div>
+
+<!-- ======== Bottom ======== -->
+<div class="btn-group">
+  <button class="btn btn-secondary" onclick="switchTab('holdings')">🛡️ 退场看板</button>
+  <button class="btn btn-secondary" onclick="switchTab('calendar')">📅 事件日历</button>
+  <button class="btn btn-primary" onclick="runScreener()">🔄 重新筛选</button>
+</div>
+
+<div class="disclaimer">
+  ⚠️ 以上内容仅供参考，不构成投资建议。数据来源：Finviz + 30个社交热度源 + 13F filings。
+</div>
+
+<script src="screener-data.js"></script>
+<script>
+// 注册Service Worker (PWA离线支持 + 自动更新)
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    console.log('[SW] 注册成功');
+    
+    // 监听版本更新
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // 新版本已下载
+          if (confirm('📊 选股器有新版本可用！是否立即刷新应用？')) {
+            newWorker.postMessage({ type: 'SKIP_WAITING' });
+            window.location.reload();
+          }
+        }
+      });
+    });
+  }).catch(() => {});
+  
+  // 监听来自SW的消息
+  navigator.serviceWorker.addEventListener('message', event => {
+    if (event.data && event.data.type === 'VERSION_RESPONSE') {
+      const ver = event.data.data;
+      console.log('[SW] 服务器版本:', ver.version);
+    }
+  });
+}
+// ========================================
+// 美股选股器 v2.0 - 主程序
+// ========================================
+
+let currentFilter = 'all';
+let currentTab = 'results';
+let stockList = [];
+
+function init() {
+  stockList = Object.values(STOCK_DATABASE);
+  stockList.sort((a, b) => b.comp - a.comp);
+  setTimeout(() => {
+    document.getElementById('loadingIndicator').style.display = 'none';
+    renderResults();
+  }, 400);
+}
+
+// ---- Tab 切换 ----
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+  
+  const hasFilter = ['results', 'holdings'].includes(tab);
+  document.getElementById('filterBar').style.display = hasFilter ? 'flex' : 'none';
+  
+  document.getElementById('resultsContent').style.display = 'block';
+  
+  switch(tab) {
+    case 'results': renderResults(); break;
+    case 'holdings': renderExitSignals(); break;
+    case 'calendar': renderCalendar(); break;
+    case 'funds': renderFunds(); break;
+    case 'heatmap': renderHeatmap(); break;
+    case 'market': renderMarket(); break;
+  }
+}
+
+// ---- 筛选 ----
+function applyFilter(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.filter-chip[data-filter="${filter}"]`).classList.add('active');
+  
+  if (currentTab === 'holdings') renderExitSignals();
+  else renderResults();
+}
+
+function getFilteredStocks() {
+  let list = [...stockList];
+  switch(currentFilter) {
+    case 'core': list = list.filter(s => s.position === 'core'); break;
+    case 'watch': list = list.filter(s => s.position === 'watch'); break;
+    case 'light': list = list.filter(s => s.position === 'light'); break;
+    case 'exit_warn': list = list.filter(s => s.exit && s.exit.status !== '持有'); break;
+    case 'earnings': list = list.filter(s => { const d = daysUntil(s.earnings_date); return d >= 0 && d <= 30; }); break;
+    case 'tech': list = list.filter(s => s.sector === '科技'); break;
+  }
+  return list;
+}
+
+// ============================================================
+// TAB 1: 选股结果
+// ============================================================
+function renderResults() {
+  const list = getFilteredStocks();
+  let html = `<div class="section-title">📋 选股结果 <span class="badge">${list.length}只</span></div>`;
+  
+  const top = SECTOR_PERFORMANCE[0];
+  html += `<div class="sector-banner">
+    <div class="sector-name">🥇 ${top.name} 领先</div>
+    <div class="sector-stats">
+      <span>近1月 <strong>${top.month}</strong></span>
+      <span>近1季 <strong>${top.quarter}</strong></span>
+      <span>YTD <strong>${top.ytd}</strong></span>
+    </div>
+  </div>`;
+  
+  list.forEach((s, i) => {
+    const r = i + 1;
+    const rc = r <= 3 ? `rank-${r}` : 'rank-default';
+    const days = daysUntil(s.earnings_date);
+    const earnLabel = (days >= 0 && days <= 30) ? `<span class="today-marker">${days}天后财报</span>` : '';
+    
+    html += `
+    <div class="stock-card" onclick="showDetail('${s.ticker}')">
+      <div class="stock-top">
+        <div class="stock-info">
+          <div class="stock-rank ${rc}">${r}</div>
+          <div>
+            <div class="stock-ticker">${s.ticker} <span class="stock-name">${s.name}</span></div>
+          </div>
+        </div>
+        <div class="stock-change change-${s.change >= 0 ? 'up' : 'down'}">${s.change >= 0 ? '+' : ''}${s.change.toFixed(2)}%</div>
+      </div>
+      <div class="stock-meta">
+        <span class="tag sector">${s.sector}</span>
+        <span class="tag ${s.comp >= 4.5 ? 'score-high' : s.comp >= 4.0 ? 'score-mid' : 'score-low'}">${s.comp.toFixed(1)}分 ${stars(s.tech)}</span>
+        <span class="position-badge position-${s.position}">${positionLabel(s.position)}</span>
+        ${s.exit && s.exit.status !== '持有' ? `<span class="tag warn">⚠️ ${s.exit.status}</span>` : ''}
+        ${earnLabel}
+      </div>
+      <div class="stock-body">
+        <div class="stock-grid">
+          <div class="metric"><div class="metric-label">技术</div><div class="metric-value">${stars(s.tech)}</div></div>
+          <div class="metric"><div class="metric-label">基本面</div><div class="metric-value">${stars(s.fund)}</div></div>
+          <div class="metric"><div class="metric-label">热度</div><div class="metric-value heat-high">${s.heat}/10</div></div>
+          <div class="metric"><div class="metric-label">综合</div><div class="metric-value" style="color:${scoreColor(s.comp)}">${s.comp.toFixed(1)}</div></div>
+        </div>
+        <div class="stock-catalyst">💡 ${s.description}</div>
+        <div class="stock-risk">⚠️ ${s.risk}</div>
+      </div>
+    </div>`;
+  });
+  
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ============================================================
+// TAB 2: 退场信号看板
+// ============================================================
+function renderExitSignals() {
+  let list = [...stockList];
+  if (currentFilter === 'exit_warn') list = list.filter(s => s.exit && s.exit.status !== '持有');
+  
+  let html = `
+  <div class="section-title">🛡️ 退场信号看板 <span class="badge">${list.length}只</span></div>
+  <div class="card" style="font-size:12px">
+    <strong>止盈逻辑：</strong>RSI>85 / 涨幅偏离均线>20% → 减仓<br>
+    <strong>止损逻辑：</strong>跌破SMA50 / RSI&lt;30 → 清仓<br>
+    <strong>预警逻辑：</strong>SMA20下穿SMA50 → 趋势转空
+  </div>`;
+  
+  // 统计
+  const warnCount = list.filter(s => s.exit && s.exit.status !== '持有').length;
+  if (warnCount > 0) {
+    html += `<div class="exit-banner warn">
+      <strong>⚠️ ${warnCount}只股票需关注退场信号</strong> — 部分标的存在超买/回调风险
+    </div>`;
+  }
+  
+  list.forEach(s => {
+    const ex = s.exit || { stop: -15, rsi_sell: 85, ma_violation: 'SMA50', status: '持有' };
+    const isWarn = ex.status !== '持有';
+    const bannerClass = isWarn ? (ex.status === '超买预警' ? 'warn' : 'exit-banner') : 'hold';
+    
+    html += `
+    <div class="stock-card" onclick="showDetail('${s.ticker}')">
+      <div class="stock-top">
+        <div class="stock-info">
+          <div class="stock-ticker">${s.ticker} <span class="stock-name">${s.name}</span></div>
+        </div>
+        <div>
+          <span class="tag ${isWarn ? 'warn' : 'hold'}">${exitIcon(ex.status)} ${ex.status}</span>
+          <span class="position-badge position-${s.position}">${positionLabel(s.position)}</span>
+        </div>
+      </div>
+      <div class="stock-body">
+        <div class="stock-grid">
+          <div class="metric"><div class="metric-label">止损线</div><div class="metric-value" style="color:#f85149">${s.price * (1 - ex.stop/100) > 0 ? '$' + (s.price * (1 - ex.stop/100)).toFixed(2) : '-'}</div></div>
+          <div class="metric"><div class="metric-label">止损幅度</div><div class="metric-value" style="color:#f85149">${ex.stop}%</div></div>
+          <div class="metric"><div class="metric-label">RSI警戒</div><div class="metric-value" style="color:#d29922">${ex.rsi_sell}</div></div>
+          <div class="metric"><div class="metric-label">均线信号</div><div class="metric-value" style="color:#58a6ff">跌破${ex.ma_violation}</div></div>
+        </div>
+        ${s.option_flow ? `<div class="info-row"><span class="label">期权异动</span><span class="value">${s.option_flow}</span></div>` : ''}
+        ${s.hedge_fund_buys.length ? `<div class="info-row"><span class="label">13F增持</span><span class="value">${s.hedge_fund_buys.join(', ')}</span></div>` : ''}
+      </div>
+    </div>`;
+  });
+  
+  if (list.length === 0) {
+    html += `<div class="empty-state"><div class="emoji">✅</div><div>暂无退场预警，所有标的持有中</div></div>`;
+  }
+  
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ============================================================
+// TAB 3: 事件日历
+// ============================================================
+function renderCalendar() {
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+  
+  let html = `<div class="section-title">📅 事件日历 <span class="badge">含财报+经济数据</span></div>`;
+  
+  // 近期财报
+  html += `<div class="card" style="margin-bottom:4px">
+    <div class="card-header"><span class="card-title">📊 近期财报（30天内）</span></div>`;
+  
+  const earningsList = stockList.filter(s => {
+    const d = daysUntil(s.earnings_date);
+    return d >= 0 && d <= 30;
+  }).sort((a, b) => daysUntil(a.earnings_date) - daysUntil(b.earnings_date));
+  
+  earningsList.forEach(s => {
+    const d = daysUntil(s.earnings_date);
+    const dd = new Date(s.earnings_date);
+    const day = dd.getDate();
+    const mon = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'][dd.getMonth()];
+    const isToday = s.earnings_date === todayStr;
+    
+    html += `<div class="calendar-card">
+      <div class="calendar-date">
+        <div class="day">${day}</div>
+        <div class="month">${mon}</div>
+      </div>
+      <div class="calendar-info">
+        <div class="title">${s.ticker} ${s.name} ${isToday ? '<span class="today-marker">今天</span>' : ''}</div>
+        <div class="desc">${s.earnings_beat || '待公布'}</div>
+      </div>
+      <div><span class="impact-badge impact-high">${d}天后</span></div>
+    </div>`;
+  });
+  
+  html += `</div>`;
+  
+  // 经济日历
+  html += `<div class="section-title">🏛️ 宏观经济事件</div>`;
+  
+  ECONOMIC_CALENDAR.forEach(e => {
+    const dd = new Date(e.date);
+    const day = dd.getDate();
+    const mon = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'][dd.getMonth()];
+    const d = daysUntil(e.date);
+    if (d < 0) return;
+    const impactClass = e.impact === '极高' ? 'impact-extreme' : `impact-${e.impact === '高' ? 'high' : 'mid'}`;
+    
+    html += `<div class="calendar-card">
+      <div class="calendar-date">
+        <div class="day">${day}</div>
+        <div class="month">${mon}</div>
+      </div>
+      <div class="calendar-info">
+        <div class="title">${e.event}</div>
+      </div>
+      <div><span class="impact-badge ${impactClass}">${e.impact}</span></div>
+    </div>`;
+  });
+  
+  // 美联储日历Tip
+  html += `<div class="card" style="margin-top:8px; font-size:12px">
+    <strong>💡 策略提醒：</strong>
+    FOMC会议前后3天科技股波动加大。CPI/PPI数据日建议减少敞口。
+    财报前2周期权IV升高，适合已持仓者卖Call收溢价。
+  </div>`;
+  
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ============================================================
+// TAB 4: 13F持仓追踪
+// ============================================================
+function renderFunds() {
+  let html = `<div class="section-title">🏛️ 13F大佬持仓 <span class="badge">2026-Q1</span></div>
+  <div class="card" style="font-size:12px; margin-bottom:8px">
+    来源：SEC 13F filings | 显示最新季度增减持TOP股票
+  </div>`;
+  
+  Object.values(HEDGE_FUND_13F).forEach(f => {
+    html += `<div class="fund-card">
+      <div class="fund-header">
+        <div>
+          <div class="fund-name">${f.name}</div>
+          <div class="fund-house">${f.fund} · ${f.last_updated}</div>
+        </div>
+      </div>
+      <div style="margin-bottom:4px"><span style="font-size:12px; color:#3fb950; font-weight:600">📈 增持</span></div>
+      <div style="margin-bottom:10px">
+        ${f.top_buys.map(t => {
+          const s = STOCK_DATABASE[t.toLowerCase()];
+          return `<span class="fund-stock" onclick="showDetail('${t}')">${t} ${s ? s.name : ''}</span>`;
+        }).join('')}
+      </div>
+      ${f.top_sells.length ? `<div style="margin-bottom:4px"><span style="font-size:12px; color:#f85149; font-weight:600">📉 减持</span></div>
+      <div>${f.top_sells.map(t => {
+        const s = STOCK_DATABASE[t.toLowerCase()];
+        return `<span class="fund-stock sell" onclick="showDetail('${t}')">${t} ${s ? s.name : ''}</span>`;
+      }).join('')}</div>` : ''}
+    </div>`;
+  });
+  
+  // 共识分析
+  html += `<div class="section-title">🔍 大佬共识分析</div>
+  <div class="card" style="font-size:12px">
+    <div class="info-row"><span class="label">最多大佬买入</span><span class="value">GOOGL (3家), NVDA (2家)</span></div>
+    <div class="info-row"><span class="label">最多大佬减持</span><span class="value">KO, PEP (传统防御降温)</span></div>
+    <div class="info-row"><span class="label">AI共识</span><span class="value">NVDA, GOOGL, AMZN普遍看好</span></div>
+  </div>`;
+  
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ============================================================
+// TAB 5: 热度排行
+// ============================================================
+function renderHeatmap() {
+  const sorted = [...stockList].sort((a, b) => b.heat - a.heat);
+  let html = `<div class="section-title">🔥 社交热度排行 <span class="badge">30个来源</span></div>`;
+  
+  sorted.forEach((s, i) => {
+    const bar = (s.heat / 10 * 100).toFixed(0);
+    html += `<div class="card" onclick="showDetail('${s.ticker}')">
+      <div class="card-header">
+        <span class="card-title">#${i+1} ${s.ticker} ${s.name}</span>
+        <span class="card-score" style="color:${s.heat >= 8 ? '#f97316' : '#d29922'}">${s.heat}/10 ${fires(s.heat)}</span>
+      </div>
+      <div class="score-bar"><div class="score-bar-track"><div class="score-bar-fill" style="width:${bar}%; background:${s.heat >= 8 ? '#f97316' : '#d29922'}"></div></div></div>
+      <div class="info-row"><span class="label">综合评分</span><span class="value">${s.comp.toFixed(1)} ${stars(s.tech)}</span></div>
+      <div class="info-row"><span class="label">催化剂</span><span class="value">${s.description}</span></div>
+    </div>`;
+  });
+  
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ============================================================
+// TAB 6: 板块表现
+// ============================================================
+function renderMarket() {
+  const emojis = ['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟','11'];
+  let html = `<div class="section-title">📈 11大板块表现（近1月排序）</div>`;
+  
+  SECTOR_PERFORMANCE.forEach((sec, i) => {
+    html += `<div class="card">
+      <div class="card-header">
+        <span class="card-title">${emojis[i] || ''} ${sec.name}</span>
+        <span class="card-score" style="color:${sec.change.includes('+') ? '#3fb950' : '#f85149'}">${sec.change}</span>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:#8b949e">
+        <span>近1周 <strong style="color:#e6edf3">${sec.week}</strong></span>
+        <span>近1月 <strong style="color:#e6edf3">${sec.month}</strong></span>
+        <span>近1季 <strong style="color:#e6edf3">${sec.quarter}</strong></span>
+        <span>YTD <strong style="color:#e6edf3">${sec.ytd}</strong></span>
+      </div>
+    </div>`;
+  });
+  
+  html += `<div class="section-title">💡 板块轮动策略</div>
+  <div class="card" style="font-size:12px">
+    <div class="stock-catalyst" style="margin-bottom:6px">🥇 聚焦科技板块（1月+14.9%, 1季+22.8%）</div>
+    <div class="stock-catalyst" style="margin-bottom:6px; border-left-color:#d29922">🥈 消费防御作为避风港（1月+5%稳健）</div>
+    <div class="stock-catalyst" style="border-left-color:#f97316">🥉 能源板块YTD+31.3%但已偏高，谨慎追高</div>
+  </div>`;
+  
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ============================================================
+// 个股详情（增强版）
+// ============================================================
+function showDetail(ticker) {
+  const s = STOCK_DATABASE[ticker];
+  if (!s) return;
+  const ex = s.exit || {};
+  const pct = (s.comp / 5 * 100).toFixed(0);
+  const days = daysUntil(s.earnings_date);
+  
+  let html = `<div class="section-title">🔍 ${s.ticker} ${s.name} 全景分析</div>`;
+  
+  // 评分卡片
+  html += `<div class="card">
+    <div class="card-header">
+      <span class="card-title">${s.ticker} · ${s.sector} · ${s.industry}</span>
+      <span class="card-score" style="color:${scoreColor(s.comp)}">${s.comp.toFixed(1)} ${stars(s.tech)}</span>
+    </div>
+    <div class="score-bar"><div class="score-bar-track"><div class="score-bar-fill" style="width:${pct}%; background:${scoreColor(s.comp)}"></div></div></div>
+    <div class="position-badge position-${s.position}" style="margin:6px 0">${positionLabel(s.position)}</div>
+  </div>`;
+  
+  // 五维评分
+  html += `<div class="card">
+    <div class="card-header"><span class="card-title">📊 五维评分</span></div>
+    ${[
+      {label:'技术面(30%)', val: s.tech, color:'#3fb950'},
+      {label:'基本面(30%)', val: s.fund, color:'#58a6ff'},
+      {label:'社交热度(25%)', val: s.heat/2, color:'#f97316'},
+      {label:'催化剂(15%)', val: s.catalyst, color:'#bc8cff'}
+    ].map(m => `
+      <div class="info-row"><span class="label">${m.label}</span><span class="value">${'⭐'.repeat(Math.round(m.val))}${m.val - Math.round(m.val) > 0 ? '✨' : ''}</span></div>
+      <div class="score-bar"><div class="score-bar-track"><div class="score-bar-fill" style="width:${m.val*20}%; background:${m.color}"></div></div></div>
+    `).join('')}
+  </div>`;
+  
+  // 退场信号
+  html += `<div class="card">
+    <div class="card-header">
+      <span class="card-title">🛡️ 退场信号</span>
+      <span class="tag ${ex.status === '持有' ? 'hold' : 'warn'}">${exitIcon(ex.status)} ${ex.status}</span>
+    </div>
+    <div class="info-row"><span class="label">止损价位</span><span class="value" style="color:#f85149">$${(s.price * (1 - ex.stop/100)).toFixed(2)} (${ex.stop}%)</span></div>
+    <div class="info-row"><span class="label">RSI警戒</span><span class="value" style="color:#d29922">RSI > ${ex.rsi_sell}</span></div>
+    <div class="info-row"><span class="label">均线信号</span><span class="value" style="color:#58a6ff">跌破${ex.ma_violation}</span></div>
+  </div>`;
+  
+  // 催化剂+事件
+  html += `<div class="card">
+    <div class="card-header"><span class="card-title">💡 催化剂</span></div>
+    <div class="stock-catalyst">${s.description}</div>
+    <div class="info-row" style="margin-top:6px"><span class="label">下次财报</span><span class="value">${s.earnings_date || '待定'} ${days >= 0 && days <= 30 ? '· ' + days + '天后' : ''}</span></div>
+    ${s.earnings_beat ? `<div class="info-row"><span class="label">上季表现</span><span class="value" style="color:#3fb950">${s.earnings_beat}</span></div>` : ''}
+  </div>`;
+  
+  // 聪明钱信号
+  html += `<div class="card">
+    <div class="card-header"><span class="card-title">🏛️ 聪明钱信号</span></div>
+    ${s.option_flow ? `<div class="info-row"><span class="label">期权异动</span><span class="value" style="color:#f97316">${s.option_flow}</span></div>` : ''}
+    ${s.hedge_fund_buys.length ? `<div class="info-row"><span class="label">13F大佬增持</span><span class="value" style="color:#3fb950">${s.hedge_fund_buys.join(', ')}</span></div>` : ''}
+  </div>`;
+  
+  // 风险
+  html += `<div class="card">
+    <div class="card-header"><span class="card-title">⚠️ 风险</span></div>
+    <div class="stock-risk">${s.risk}</div>
+  </div>`;
+  
+  html += `<div style="padding:8px 12px; text-align:center">
+    <button class="btn btn-secondary" onclick="switchTab('results')" style="display:inline-flex; width:auto">← 返回</button>
+  </div>`;
+  
+  document.getElementById('resultsContent').innerHTML = html;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---- 重新筛选 ----
+function runScreener() {
+  document.getElementById('resultsContent').style.display = 'none';
+  document.getElementById('loadingIndicator').style.display = 'flex';
+  setTimeout(() => {
+    document.getElementById('loadingIndicator').style.display = 'none';
+    document.getElementById('resultsContent').style.display = 'block';
+    stockList.sort((a, b) => (b.comp + Math.random()*0.1) - (a.comp + Math.random()*0.1));
+    if (currentTab === 'holdings') renderExitSignals();
+    else renderResults();
+  }, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+node_modules/
+*.pyc
+.DS_Store
+screener.py
+screener_ashare.py
+screener_dividend.py
+screener_full.py
+screener_tech.py
+bullish_stocks.py
+A股选股框架说明.md
+选股框架_选股器说明.md
+*.log
