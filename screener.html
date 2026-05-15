@@ -289,6 +289,13 @@ function renderResults() {
         </div>
         <div class="stock-catalyst">💡 ${s.description}</div>
         <div class="stock-risk">⚠️ ${s.risk}</div>
+        <div style="margin-top:6px; display:flex; gap:6px">
+          <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="event.stopPropagation();window.open('https://finviz.com/quote.ashx?t=${s.ticker}','_blank')">📈 K线</span>
+          <span style="font-size:11px; color:#8b949e">|</span>
+          <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="event.stopPropagation();window.open('https://www.tradingview.com/chart/?symbol=${s.ticker}','_blank')">📊 深度</span>
+          ${s.earnings_date ? `<span style="font-size:11px; color:#8b949e">|</span>
+          <span style="font-size:11px; color:#d29922">📅 ${s.earnings_date}</span>` : ''}
+        </div>
       </div>
     </div>`;
   });
@@ -592,6 +599,17 @@ function showDetail(ticker) {
   html += `<div class="card">
     <div class="card-header"><span class="card-title">⚠️ 风险</span></div>
     <div class="stock-risk">${s.risk}</div>
+  </div>`;
+  
+  // 跳转K线
+  const tickerLow = s.ticker.toLowerCase();
+  html += `<div style="display:flex; gap:8px; padding:8px 12px">
+    <button class="btn btn-secondary" onclick="window.open('https://finviz.com/quote.ashx?t=${s.ticker}&p=d','_blank')" style="flex:1; justify-content:center">
+      📈 Finviz K线
+    </button>
+    <button class="btn btn-secondary" onclick="window.open('https://www.tradingview.com/chart/?symbol=${s.ticker}','_blank')" style="flex:1; justify-content:center">
+      📊 TradingView
+    </button>
   </div>`;
   
   html += `<div style="padding:8px 12px; text-align:center">
