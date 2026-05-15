@@ -1,4 +1,4 @@
-name: 部署选股器
+name: 部署到gh-pages
 
 on:
   push:
@@ -12,14 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: 部署到gh-pages分支
+
+      - name: 部署
         run: |
           git config user.name "tepeiya"
           git config user.email "tepeiya@users.noreply.github.com"
-          git checkout --orphan gh-pages
-          git rm -rf .
-          git checkout main -- screener.html screener-style.css screener-data.js manifest.json sw.js icon-192.png icon-512.png version.json
+          mkdir -p /tmp/deploy
+          cp screener.html screener-style.css screener-data.js manifest.json sw.js icon-192.png icon-512.png version.json /tmp/deploy/
+          cd /tmp/deploy
+          git init
+          git checkout -b gh-pages
           git add .
           git commit -m "deploy: $(date '+%Y-%m-%d %H:%M')"
+          git remote add origin https://tepeiya:${{ secrets.GITHUB_TOKEN }}@github.com/tepeiya/us-stock-screener.git
           git push origin gh-pages --force
