@@ -1,8 +1,9 @@
 // 美股选股器 v2 - Service Worker
 // 版本号：每次更新代码时修改此版本号，用户会自动更新
+// GitHub Pages: https://tepeiya.github.io/us-stock-screener/
 
 const CACHE_NAME = 'screener-v2.0.0';
-const VERSION_CHECK_URL = '/version.json';
+const VERSION_CHECK_URL = 'https://tepeiya.github.io/us-stock-screener/version.json';
 
 const urlsToCache = [
   '/screener.html',
