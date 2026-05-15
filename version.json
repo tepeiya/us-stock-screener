@@ -1,6 +1,6 @@
 {
-  "version": "2.1.0",
+  "version": "2.1.1",
   "buildDate": "2026-05-15",
-  "changelog": "数据同步：更新23只股票的综合评分、退场信号、13F持仓、财报日历",
+  "changelog": "更新13F：添加Renaissance Technologies Q1最新持仓，调整对应股票的大佬持股数据",
   "forceUpdate": false
 }

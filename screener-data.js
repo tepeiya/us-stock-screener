@@ -87,7 +87,16 @@ const HEDGE_FUND_13F = {
     top_buys: ['CVX', 'OXY', 'AXP'],
     top_sells: ['AAPL'],
     last_updated: '2026-Q1'
+  },
+
+  jim_simons: {
+    name: 'Jim Simons (Renaissance)',
+    fund: 'Renaissance Technologies',
+    top_buys: ['AAPL', 'NVDA', 'LIN', 'AVGO', 'AGI', 'JPM'],
+    top_sells: ['NFLX', 'PLTR', 'TSLA', 'PG', 'COST', 'MSFT'],
+    last_updated: '2026-Q1'
   }
+
 };
 
 // ---- 股票数据模型 ----
@@ -108,7 +117,7 @@ const STOCK_DATABASE = {
     risk: 'PE 48中等偏高',
     earnings_date: '2026-05-28',
     earnings_beat: 'Q1超预期+12%',
-    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance"],
+    hedge_fund_buys: ["Bridgewater", "Citadel"],
     option_flow: '大单Call 5/28行权价$240',
     exit: {"stop": -15, "rsi_sell": 85, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -164,7 +173,7 @@ const STOCK_DATABASE = {
     risk: '走势稳健但短期波动较小',
     earnings_date: '2026-07-22',
     earnings_beat: 'Q3超预期+8%',
-    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance"],
+    hedge_fund_buys: ["Bridgewater", "Citadel"],
     option_flow: '累计Call仓位高',
     exit: {"stop": -15, "rsi_sell": 80, "ma_violation": "SMA50", "status": "持有"}
   },
