@@ -439,43 +439,84 @@ function renderCalendar() {
 }
 
 // ============================================================
-// TAB 4: 13F持仓追踪
+// TAB 4: 13F持仓追踪（升级版）
 // ============================================================
 function renderFunds() {
   let html = `<div class="section-title">🏛️ 13F大佬持仓 <span class="badge">2026-Q1</span></div>
   <div class="card" style="font-size:12px; margin-bottom:8px">
-    来源：SEC 13F filings | 显示最新季度增减持TOP股票
+    来源：SEC 13F filings · 显示最新季度增减持TOP股票及金额
   </div>`;
   
   Object.values(HEDGE_FUND_13F).forEach(f => {
+    // 判断是否新版数据（带金额的详细版）
+    const isDetailed = f.top_buys.length > 0 && typeof f.top_buys[0] === 'object' && f.top_buys[0].amount;
+    
     html += `<div class="fund-card">
       <div class="fund-header">
         <div>
           <div class="fund-name">${f.name}</div>
           <div class="fund-house">${f.fund} · ${f.last_updated}</div>
         </div>
-      </div>
-      <div style="margin-bottom:4px"><span style="font-size:12px; color:#3fb950; font-weight:600">📈 增持</span></div>
+        ${f.portfolio_value ? `<span style="font-size:11px; color:${isDetailed ? '#d29922' : '#8b949e'}">组合 ${f.portfolio_value}${f.positions ? ' · ' + f.positions + '只' : ''}</span>` : ''}
+      </div>`;
+    
+    if (isDetailed) {
+      // 新版：带金额的详细展示
+      html += `<div style="margin-bottom:4px"><span style="font-size:12px; color:#3fb950; font-weight:600">📈 增持</span></div>
+      <div style="margin-bottom:10px">`;
+      f.top_buys.forEach(t => {
+        const s = STOCK_DATABASE[t.ticker.toLowerCase()];
+        html += `<div class="info-row" style="font-size:12px">
+          <span><span class="fund-stock" onclick="showDetail('${t.ticker}')" style="font-size:12px; cursor:pointer">${t.ticker} ${s ? s.name : ''}</span></span>
+          <span style="color:#3fb950">${t.amount}${t.shares ? ' (' + t.shares + '股)' : ''}</span>
+        </div>`;
+      });
+      html += `</div>`;
+      
+      if (f.top_sells.length > 0) {
+        html += `<div style="margin-bottom:4px"><span style="font-size:12px; color:#f85149; font-weight:600">📉 减持</span></div>
+        <div>`;
+        f.top_sells.forEach(t => {
+          const s = STOCK_DATABASE[t.ticker.toLowerCase()];
+          html += `<div class="info-row" style="font-size:12px">
+            <span><span class="fund-stock sell" onclick="showDetail('${t.ticker}')" style="font-size:12px; cursor:pointer">${t.ticker} ${s ? s.name : ''}</span></span>
+            <span style="color:#f85149">${t.amount}${t.shares ? ' (' + t.shares + '股)' : ''}</span>
+          </div>`;
+        });
+        html += `</div>`;
+      }
+    } else {
+      // 旧版兼容
+      html += `<div style="margin-bottom:4px"><span style="font-size:12px; color:#3fb950; font-weight:600">📈 增持</span></div>
       <div style="margin-bottom:10px">
         ${f.top_buys.map(t => {
           const s = STOCK_DATABASE[t.toLowerCase()];
           return `<span class="fund-stock" onclick="showDetail('${t}')">${t} ${s ? s.name : ''}</span>`;
         }).join('')}
-      </div>
-      ${f.top_sells.length ? `<div style="margin-bottom:4px"><span style="font-size:12px; color:#f85149; font-weight:600">📉 减持</span></div>
-      <div>${f.top_sells.map(t => {
-        const s = STOCK_DATABASE[t.toLowerCase()];
-        return `<span class="fund-stock sell" onclick="showDetail('${t}')">${t} ${s ? s.name : ''}</span>`;
-      }).join('')}</div>` : ''}
-    </div>`;
+      </div>`;
+      if (f.top_sells.length > 0) {
+        html += `<div style="margin-bottom:4px"><span style="font-size:12px; color:#f85149; font-weight:600">📉 减持</span></div>
+        <div>${f.top_sells.map(t => {
+          const s = STOCK_DATABASE[t.toLowerCase()];
+          return `<span class="fund-stock sell" onclick="showDetail('${t}')">${t} ${s ? s.name : ''}</span>`;
+        }).join('')}</div>`;
+      }
+    }
+    
+    html += `</div>`;
   });
   
-  // 共识分析
+  // 共识分析（升级版）
   html += `<div class="section-title">🔍 大佬共识分析</div>
   <div class="card" style="font-size:12px">
-    <div class="info-row"><span class="label">最多大佬买入</span><span class="value">GOOGL (3家), NVDA (2家)</span></div>
-    <div class="info-row"><span class="label">最多大佬减持</span><span class="value">KO, PEP (传统防御降温)</span></div>
-    <div class="info-row"><span class="label">AI共识</span><span class="value">NVDA, GOOGL, AMZN普遍看好</span></div>
+    <div class="info-row"><span class="label">🥇 最多大佬买入</span><span class="value" style="color:#3fb950">GOOGL (3家), NVDA (2家)</span></div>
+    <div class="info-row"><span class="label">Renaissance NVDA</span><span class="value" style="color:#3fb950">+$278M (1.1M股)</span></div>
+    <div class="info-row"><span class="label">Renaissance AVGO</span><span class="value" style="color:#3fb950">+$245M (560K股)</span></div>
+    <div class="info-row"><span class="label">Renaissance AAPL</span><span class="value" style="color:#3fb950">+$781M (3.2M股) 🏆最大</span></div>
+    <div class="info-row"><span class="label">Renaissance JPM</span><span class="value" style="color:#3fb950">+$202M (670K股)</span></div>
+    <div class="info-row"><span class="label" style="color:#8b949e">Renaissance MSFT</span><span class="value" style="color:#f85149">-329M (800K股)</span></div>
+    <div class="info-row"><span class="label" style="color:#8b949e">Renaissance COST</span><span class="value" style="color:#f85149">-578M (560K股)</span></div>
+    <div class="info-row"><span class="label">Buffett 减持</span><span class="value" style="color:#f85149">AAPL -$1.2B</span></div>
   </div>`;
   
   document.getElementById('resultsContent').innerHTML = html;

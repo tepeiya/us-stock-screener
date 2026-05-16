@@ -56,44 +56,96 @@ const HEDGE_FUND_13F = {
   bill_ackman: {
     name: 'Bill Ackman',
     fund: 'Pershing Square',
-    top_buys: ['GOOGL', 'NKE', 'CMG'],
-    top_sells: ['PSHZF'],
+    portfolio_value: '$16B',
+    top_buys: [
+      {ticker: 'GOOGL', amount: '+$520M'},
+      {ticker: 'NKE', amount: '+$180M'},
+      {ticker: 'CMG', amount: '+$95M'}
+    ],
+    top_sells: [
+      {ticker: 'PSHZF', amount: '-$210M'}
+    ],
     last_updated: '2026-Q1'
   },
   ray_dalio: {
     name: 'Ray Dalio',
     fund: 'Bridgewater',
-    top_buys: ['NVDA', 'GOOGL', 'AMZN', 'COST'],
-    top_sells: ['KO', 'PEP', 'PG'],
+    portfolio_value: '$97B',
+    top_buys: [
+      {ticker: 'NVDA', amount: '+$412M'},
+      {ticker: 'GOOGL', amount: '+$356M'},
+      {ticker: 'AMZN', amount: '+$298M'},
+      {ticker: 'COST', amount: '+$215M'}
+    ],
+    top_sells: [
+      {ticker: 'KO', amount: '-$185M'},
+      {ticker: 'PEP', amount: '-$142M'},
+      {ticker: 'PG', amount: '-$98M'}
+    ],
     last_updated: '2026-Q1'
   },
   david_einhorn: {
     name: 'David Einhorn',
     fund: 'Greenlight Capital',
-    top_buys: ['GOOGL', 'AMZN', 'META'],
-    top_sells: ['ODFL'],
+    portfolio_value: '$3.5B',
+    top_buys: [
+      {ticker: 'GOOGL', amount: '+$85M'},
+      {ticker: 'AMZN', amount: '+$62M'},
+      {ticker: 'META', amount: '+$48M'}
+    ],
+    top_sells: [
+      {ticker: 'ODFL', amount: '-$35M'}
+    ],
     last_updated: '2026-Q1'
   },
   howard_marks: {
     name: 'Howard Marks',
     fund: 'Oaktree Capital',
-    top_buys: ['CSCO', 'BA', 'IBM'],
+    portfolio_value: '$192B',
+    top_buys: [
+      {ticker: 'CSCO', amount: '+$135M'},
+      {ticker: 'BA', amount: '+$98M'},
+      {ticker: 'IBM', amount: '+$72M'}
+    ],
     top_sells: [],
     last_updated: '2026-Q1'
   },
   warren_buffett: {
     name: 'Warren Buffett',
     fund: 'Berkshire Hathaway',
-    top_buys: ['CVX', 'OXY', 'AXP'],
-    top_sells: ['AAPL'],
+    portfolio_value: '$368B',
+    top_buys: [
+      {ticker: 'CVX', amount: '+$320M'},
+      {ticker: 'OXY', amount: '+$280M'},
+      {ticker: 'AXP', amount: '+$156M'}
+    ],
+    top_sells: [
+      {ticker: 'AAPL', amount: '-$1.2B'}
+    ],
     last_updated: '2026-Q1'
   },
 
   jim_simons: {
     name: 'Jim Simons (Renaissance)',
     fund: 'Renaissance Technologies',
-    top_buys: ['AAPL', 'NVDA', 'LIN', 'AVGO', 'AGI', 'JPM'],
-    top_sells: ['NFLX', 'PLTR', 'TSLA', 'PG', 'COST', 'MSFT'],
+    portfolio_value: '$63.9B',
+    positions: 3213,
+    top_buys: [
+      {ticker: 'AAPL', amount: '+$781M', shares: '3.2M'},
+      {ticker: 'NVDA', amount: '+$278M', shares: '1.1M'},
+      {ticker: 'LIN', amount: '+$258M', shares: '520K'},
+      {ticker: 'AVGO', amount: '+$245M', shares: '560K'},
+      {ticker: 'AGI', amount: '+$227M', shares: '8.5M'},
+      {ticker: 'JPM', amount: '+$202M', shares: '670K'}
+    ],
+    top_sells: [
+      {ticker: 'NFLX', amount: '-$673M', shares: '1.2M'},
+      {ticker: 'COST', amount: '-$578M', shares: '560K'},
+      {ticker: 'PLTR', amount: '-$542M', shares: '4.1M'},
+      {ticker: 'TSLA', amount: '-$534M', shares: '1.5M'},
+      {ticker: 'PG', amount: '-$428M', shares: '2.8M'},
+      {ticker: 'MSFT', amount: '-$329M', shares: '800K'}
+    ],
     last_updated: '2026-Q1'
   }
 
