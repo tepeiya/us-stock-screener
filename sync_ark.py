@@ -78,10 +78,10 @@ def parse_ark_file(filepath):
         lines = block.split('\n')
         date_str = lines[0].strip() if lines else ''
         
-        # 找到表格行
+        # 找到表格行（跳过表头和空行）
         trades = []
         for line in lines:
-            if line.startswith('|') and '基金' not in line and '---' not in line and '：' not in line:
+            if line.startswith('|') and '基金' not in line and '---' not in line and '：' not in line and '标识' not in line:
                 trade = parse_trade_row(line)
                 if trade:
                     trades.append(trade)
