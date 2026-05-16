@@ -115,6 +115,7 @@
   <div class="tab" data-tab="funds" onclick="switchTab('funds')">🏛️ 13F</div>
   <div class="tab" data-tab="heatmap" onclick="switchTab('heatmap')">🔥 热度</div>
   <div class="tab" data-tab="market" onclick="switchTab('market')">🏢 板块</div>
+  <div class="tab" data-tab="ark" onclick="switchTab('ark')">🧵 ARK</div>
 </div>
 
 <!-- ======== Filter Chips ======== -->
@@ -213,6 +214,7 @@ function switchTab(tab) {
     case 'funds': renderFunds(); break;
     case 'heatmap': renderHeatmap(); break;
     case 'market': renderMarket(); break;
+    case 'ark': renderARK(); break;
   }
 }
 
@@ -740,6 +742,79 @@ function showDetail(ticker) {
   
   document.getElementById('resultsContent').innerHTML = html;
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// TAB 7: ARK每日交易追踪
+// ============================================================
+function renderARK() {
+  const data = ARK_DATA;
+  
+  let html = `<div class="section-title">🧵 ARK每日交易追踪 <span class="badge">更新至 ${data.lastUpdated}</span></div>`;
+  
+  html += `<div class="card" style="margin-bottom:4px; font-size:12px">
+    数据来源: <span style="color:#58a6ff;cursor:pointer" onclick="window.open('https://cathiesark.com/ark-funds-combined/trades','_blank')">cathiesark.com ↗</span>
+    · ARK Invest（木头姐）每日持仓交易披露
+  </div>`;
+  
+  let totalBuy = 0, totalSell = 0;
+  data.recentDays.forEach(day => {
+    if (day.buys) totalBuy += day.buys.length;
+    if (day.sells) totalSell += day.sells.length;
+  });
+  
+  html += `<div class="sector-banner" style="border-color:#bc8cff">
+    <div style="display:flex; justify-content:space-between; align-items:center">
+      <div><span style="font-size:16px; font-weight:700; color:#bc8cff">🧵 ARK 近5日交易</span></div>
+      <div style="text-align:right">
+        <div style="font-size:12px; color:#3fb950">🟢 买入 ${totalBuy}笔</div>
+        <div style="font-size:12px; color:#f85149">🔴 卖出 ${totalSell}笔</div>
+      </div>
+    </div>
+  </div>`;
+  
+  data.recentDays.forEach((day, di) => {
+    const dateObj = new Date(day.date);
+    const m = dateObj.getMonth() + 1;
+    const d = dateObj.getDate();
+    const wds = ['日','一','二','三','四','五','六'];
+    const wd = wds[dateObj.getDay()];
+    
+    html += `<div class="section-title" style="padding-top:${di===0?'4':'12'}px">${di===0?'📌 ':''}${m}月${d}日 周${wd}</div>`;
+    
+    if (day.buys && day.buys.length > 0) {
+      html += `<div class="card" style="margin-bottom:2px; border-left:3px solid #3fb950">
+        <div style="font-size:12px; font-weight:600; color:#3fb950; margin-bottom:4px">🟢 买入</div>`;
+      day.buys.forEach(t => {
+        html += `<div class="info-row" style="font-size:12px">
+          <span><span class="tag" style="background:rgba(188,140,255,0.15);color:#bc8cff;font-size:10px">${t.fund}</span> ${t.ticker}</span>
+          <span style="color:#3fb950">+${t.amount}</span>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+    
+    if (day.sells && day.sells.length > 0) {
+      html += `<div class="card" style="margin-bottom:2px; border-left:3px solid #f85149">
+        <div style="font-size:12px; font-weight:600; color:#f85149; margin-bottom:4px">🔴 卖出</div>`;
+      day.sells.forEach(t => {
+        html += `<div class="info-row" style="font-size:12px">
+          <span><span class="tag" style="background:rgba(188,140,255,0.15);color:#bc8cff;font-size:10px">${t.fund}</span> ${t.ticker}</span>
+          <span style="color:#f85149">-${t.amount}</span>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+  });
+  
+  html += `<div class="section-title" style="padding-top:12px">📌 本周交易热点</div>
+  <div class="card" style="font-size:12px">
+    <div class="info-row"><span class="label">连续卖出</span><span class="value" style="color:#f85149">TSM（连续5天减仓）、TWST（连续减仓）</span></div>
+    <div class="info-row"><span class="label">持续买入</span><span class="value" style="color:#3fb950">NTRA（连续3天加仓）</span></div>
+    <div class="info-row"><span class="label">操作方向</span><span class="value" style="color:#d29922">整体净卖出，减半导体仓位</span></div>
+  </div>`;
+  
+  document.getElementById('resultsContent').innerHTML = html;
 }
 
 // ---- 重新筛选 ----
