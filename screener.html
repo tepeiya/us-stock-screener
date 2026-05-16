@@ -507,16 +507,15 @@ function renderFunds() {
   });
   
   // 共识分析（升级版）
-  html += `<div class="section-title">🔍 大佬共识分析</div>
+  html += `<div class="section-title">🔍 大佬共识分析（12位）</div>
   <div class="card" style="font-size:12px">
-    <div class="info-row"><span class="label">🥇 最多大佬买入</span><span class="value" style="color:#3fb950">GOOGL (3家), NVDA (2家)</span></div>
-    <div class="info-row"><span class="label">Renaissance NVDA</span><span class="value" style="color:#3fb950">+$278M (1.1M股)</span></div>
-    <div class="info-row"><span class="label">Renaissance AVGO</span><span class="value" style="color:#3fb950">+$245M (560K股)</span></div>
-    <div class="info-row"><span class="label">Renaissance AAPL</span><span class="value" style="color:#3fb950">+$781M (3.2M股) 🏆最大</span></div>
-    <div class="info-row"><span class="label">Renaissance JPM</span><span class="value" style="color:#3fb950">+$202M (670K股)</span></div>
-    <div class="info-row"><span class="label" style="color:#8b949e">Renaissance MSFT</span><span class="value" style="color:#f85149">-329M (800K股)</span></div>
-    <div class="info-row"><span class="label" style="color:#8b949e">Renaissance COST</span><span class="value" style="color:#f85149">-578M (560K股)</span></div>
+    <div class="info-row"><span class="label">🥇 最多大佬买入</span><span class="value" style="color:#3fb950">NVDA (6家), MSFT/AMZN (4家), AVGO/META (3家)</span></div>
+    <div class="info-row"><span class="label">Renaissance NVDA</span><span class="value" style="color:#3fb950">+$278M</span></div>
+    <div class="info-row"><span class="label">Citadel NVDA</span><span class="value" style="color:#3fb950">+$850M 🏆最大多头</span></div>
+    <div class="info-row"><span class="label">Tiger Global META</span><span class="value" style="color:#3fb950">+$480M</span></div>
+    <div class="info-row"><span class="label">Point72 NVDA</span><span class="value" style="color:#3fb950">+$350M</span></div>
     <div class="info-row"><span class="label">Buffett 减持</span><span class="value" style="color:#f85149">AAPL -$1.2B</span></div>
+    <div class="info-row"><span class="label">Renaissance 减持</span><span class="value" style="color:#f85149">COST -$578M, PLTR -$542M</span></div>
   </div>`;
   
   document.getElementById('resultsContent').innerHTML = html;

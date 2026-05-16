@@ -149,6 +149,102 @@ const HEDGE_FUND_13F = {
     last_updated: '2026-Q1'
   }
 
+  chase_coleman: {
+    name: 'Chase Coleman',
+    fund: 'Tiger Global Management',
+    portfolio_value: '$36B',
+    top_buys: [
+      {ticker: 'META', amount: '+$480M'},
+      {ticker: 'NVDA', amount: '+$320M'},
+      {ticker: 'MSFT', amount: '+$280M'}
+    ],
+    top_sells: [
+      {ticker: 'SE', amount: '-$195M'},
+      {ticker: 'COIN', amount: '-$120M'}
+    ],
+    last_updated: '2026-Q1'
+  },
+
+  daniel_loeb: {
+    name: 'Daniel Loeb',
+    fund: 'Third Point',
+    portfolio_value: '$18B',
+    top_buys: [
+      {ticker: 'GOOGL', amount: '+$210M'},
+      {ticker: 'AMZN', amount: '+$175M'},
+      {ticker: 'NOW', amount: '+$88M'}
+    ],
+    top_sells: [
+      {ticker: 'BAC', amount: '-$95M'}
+    ],
+    last_updated: '2026-Q1'
+  },
+
+  ken_griffin: {
+    name: 'Ken Griffin',
+    fund: 'Citadel Advisors',
+    portfolio_value: '$62B',
+    positions: 4826,
+    top_buys: [
+      {ticker: 'NVDA', amount: '+$850M'},
+      {ticker: 'AVGO', amount: '+$620M'},
+      {ticker: 'MSFT', amount: '+$510M'},
+      {ticker: 'AMZN', amount: '+$420M'}
+    ],
+    top_sells: [
+      {ticker: 'AAPL', amount: '-$380M'},
+      {ticker: 'TSLA', amount: '-$270M'}
+    ],
+    last_updated: '2026-Q1'
+  },
+
+  steve_cohen: {
+    name: 'Steve Cohen',
+    fund: 'Point72 Asset Management',
+    portfolio_value: '$34B',
+    positions: 2150,
+    top_buys: [
+      {ticker: 'NVDA', amount: '+$350M'},
+      {ticker: 'AVGO', amount: '+$280M'},
+      {ticker: 'PLTR', amount: '+$145M'}
+    ],
+    top_sells: [
+      {ticker: 'AAPL', amount: '-$120M'},
+      {ticker: 'DIS', amount: '-$85M'}
+    ],
+    last_updated: '2026-Q1'
+  },
+
+  david_tepper: {
+    name: 'David Tepper',
+    fund: 'Appaloosa Management',
+    portfolio_value: '$6.5B',
+    top_buys: [
+      {ticker: 'AMZN', amount: '+$165M'},
+      {ticker: 'META', amount: '+$120M'},
+      {ticker: 'NVDA', amount: '+$98M'}
+    ],
+    top_sells: [
+      {ticker: 'GOOGL', amount: '-$75M'},
+      {ticker: 'AMD', amount: '-$52M'}
+    ],
+    last_updated: '2026-Q1'
+  },
+
+  nelson_peltz: {
+    name: 'Nelson Peltz',
+    fund: 'Trian Fund Management',
+    portfolio_value: '$8.5B',
+    top_buys: [
+      {ticker: 'PG', amount: '+$95M'},
+      {ticker: 'JPM', amount: '+$72M'}
+    ],
+    top_sells: [
+      {ticker: 'KO', amount: '-$45M'}
+    ],
+    last_updated: '2026-Q1'
+  }
+
 };
 
 // ---- 股票数据模型 ----
@@ -169,7 +265,7 @@ const STOCK_DATABASE = {
     risk: 'PE 48中等偏高',
     earnings_date: '2026-05-28',
     earnings_beat: 'Q1超预期+12%',
-    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance"],
+    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance", "Tiger Global", "Appaloosa"],
     option_flow: '大单Call 5/28行权价$240',
     exit: {"stop": -15, "rsi_sell": 85, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -211,7 +307,7 @@ const STOCK_DATABASE = {
     risk: '反垄断监管风险',
     earnings_date: '2026-07-29',
     earnings_beat: 'Q1超预期+11%',
-    hedge_fund_buys: ["Bridgewater", "Greenlight"],
+    hedge_fund_buys: ["Bridgewater", "Greenlight", "Tiger Global", "Appaloosa"],
     option_flow: 'Call价差6月$620/$650',
     exit: {"stop": -18, "rsi_sell": 85, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -225,7 +321,7 @@ const STOCK_DATABASE = {
     risk: '走势稳健但短期波动较小',
     earnings_date: '2026-07-22',
     earnings_beat: 'Q3超预期+8%',
-    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance"],
+    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance", "Tiger Global"],
     option_flow: '累计Call仓位高',
     exit: {"stop": -15, "rsi_sell": 80, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -239,7 +335,7 @@ const STOCK_DATABASE = {
     risk: '估值偏高',
     earnings_date: '2026-07-23',
     earnings_beat: 'Q1超预期+10%',
-    hedge_fund_buys: [],
+    hedge_fund_buys: ["Third Point"],
     option_flow: '温和Call',
     exit: {"stop": -15, "rsi_sell": 85, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -351,7 +447,7 @@ const STOCK_DATABASE = {
     risk: '反垄断压制',
     earnings_date: '2026-07-23',
     earnings_beat: 'Q1超预期+8%',
-    hedge_fund_buys: ["Pershing Square", "Bridgewater", "Greenlight"],
+    hedge_fund_buys: ["Pershing Square", "Bridgewater", "Greenlight", "Third Point"],
     option_flow: 'Call堆积',
     exit: {"stop": -15, "rsi_sell": 80, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -365,7 +461,7 @@ const STOCK_DATABASE = {
     risk: '今日回调-0.7%',
     earnings_date: '2026-07-30',
     earnings_beat: 'Q1超预期+6%',
-    hedge_fund_buys: ["Bridgewater", "Greenlight"],
+    hedge_fund_buys: ["Bridgewater", "Greenlight", "Third Point", "Appaloosa"],
     option_flow: '温和看涨',
     exit: {"stop": -15, "rsi_sell": 80, "ma_violation": "SMA20", "status": "持有"}
   },
@@ -379,7 +475,7 @@ const STOCK_DATABASE = {
     risk: '增长慢',
     earnings_date: '2026-07-23',
     earnings_beat: 'Q3超预期+4%',
-    hedge_fund_buys: ["Berkshire"],
+    hedge_fund_buys: ["Berkshire", "Trian"],
     option_flow: '低波动',
     exit: {"stop": -10, "rsi_sell": 75, "ma_violation": "SMA20", "status": "持有"}
   },
@@ -421,7 +517,7 @@ const STOCK_DATABASE = {
     risk: '增长慢',
     earnings_date: '2026-07-22',
     earnings_beat: 'Q1超预期+3%',
-    hedge_fund_buys: ["Berkshire"],
+    hedge_fund_buys: ["Berkshire", "Trian"],
     option_flow: '低波动',
     exit: {"stop": -10, "rsi_sell": 75, "ma_violation": "SMA20", "status": "持有"}
   },
@@ -477,7 +573,7 @@ const STOCK_DATABASE = {
     risk: '短期均线走弱',
     earnings_date: '2026-07-14',
     earnings_beat: 'Q1超预期+8%',
-    hedge_fund_buys: ["Berkshire", "Renaissance"],
+    hedge_fund_buys: ["Berkshire", "Renaissance", "Trian"],
     option_flow: '温和',
     exit: {"stop": -15, "rsi_sell": 78, "ma_violation": "SMA20", "status": "持有"}
   },
