@@ -71,7 +71,7 @@ stocks = [
      "funds":"Berkshire","ed":"08-01","ed_d":78},
     {"r":23,"t":"JPM","n":"JPMorgan","ind":"银行","sec":"金融","tl":3,"fl":5,"h":6,"cl":3,"c":3.3,"pos":"light",
      "desc":"全能银行+AI","risk":"均线走弱","stop":"$257.4","rsi":78,"ma":"SMA20","sts":"持有",
-     "funds":"Berkshire","ed":"07-14","ed_d":60},
+     "funds":"Berkshire, Renaissance","ed":"07-14","ed_d":60},
 ]
 
 stocks.sort(key=lambda s: -s["c"])

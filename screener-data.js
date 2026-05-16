@@ -117,7 +117,7 @@ const STOCK_DATABASE = {
     risk: 'PE 48中等偏高',
     earnings_date: '2026-05-28',
     earnings_beat: 'Q1超预期+12%',
-    hedge_fund_buys: ["Bridgewater", "Citadel"],
+    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance"],
     option_flow: '大单Call 5/28行权价$240',
     exit: {"stop": -15, "rsi_sell": 85, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -145,7 +145,7 @@ const STOCK_DATABASE = {
     risk: 'PE 85较高',
     earnings_date: '2026-06-04',
     earnings_beat: 'Q1超预期+9%',
-    hedge_fund_buys: ["Citadel", "Point72"],
+    hedge_fund_buys: ["Citadel", "Point72", "Renaissance"],
     option_flow: '深价外Call 7月$450累计3000张',
     exit: {"stop": -12, "rsi_sell": 82, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -173,7 +173,7 @@ const STOCK_DATABASE = {
     risk: '走势稳健但短期波动较小',
     earnings_date: '2026-07-22',
     earnings_beat: 'Q3超预期+8%',
-    hedge_fund_buys: ["Bridgewater", "Citadel"],
+    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance"],
     option_flow: '累计Call仓位高',
     exit: {"stop": -15, "rsi_sell": 80, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -425,7 +425,7 @@ const STOCK_DATABASE = {
     risk: '短期均线走弱',
     earnings_date: '2026-07-14',
     earnings_beat: 'Q1超预期+8%',
-    hedge_fund_buys: ["Berkshire"],
+    hedge_fund_buys: ["Berkshire", "Renaissance"],
     option_flow: '温和',
     exit: {"stop": -15, "rsi_sell": 78, "ma_violation": "SMA20", "status": "持有"}
   },
