@@ -110,7 +110,7 @@ const STOCK_DATABASE = {
 
   nvda: {
     ticker: 'NVDA', name: 'NVIDIA', sector: '科技', industry: '半导体',
-    cap: 'Mega', price: 234.87, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 5, fund: 5, heat: 9, catalyst: 5, comp: 4.8,
     position: 'core',
     description: 'Blackwell量产+中美AI峰会+13F增持',
@@ -124,7 +124,7 @@ const STOCK_DATABASE = {
 
   csco: {
     ticker: 'CSCO', name: 'Cisco', sector: '科技', industry: '通信设备',
-    cap: 'Mega', price: 117.31, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 5, fund: 5, heat: 8, catalyst: 5, comp: 4.7,
     position: 'watch',
     description: 'NVIDIA战略入股+AI-RAN转型+财报暴打预期',
@@ -138,7 +138,7 @@ const STOCK_DATABASE = {
 
   avgo: {
     ticker: 'AVGO', name: 'Broadcom', sector: '科技', industry: '半导体',
-    cap: 'Mega', price: 436.09, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 5, fund: 5, heat: 8, catalyst: 5, comp: 4.7,
     position: 'core',
     description: 'AI定制芯片+AISC需求爆发+VMware整合',
@@ -152,7 +152,7 @@ const STOCK_DATABASE = {
 
   meta: {
     ticker: 'META', name: 'Meta', sector: '科技', industry: '互联网',
-    cap: 'Mega', price: 622.39, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 5, fund: 5, heat: 8, catalyst: 4, comp: 4.5,
     position: 'core',
     description: 'AI广告+开源Llama生态+Q2指引强劲',
@@ -166,7 +166,7 @@ const STOCK_DATABASE = {
 
   msft: {
     ticker: 'MSFT', name: 'Microsoft', sector: '科技', industry: '软件',
-    cap: 'Mega', price: 409.01, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 5, fund: 5, heat: 9, catalyst: 4, comp: 4.5,
     position: 'core',
     description: 'Azure+AI Copilot+机构重仓持股',
@@ -180,7 +180,7 @@ const STOCK_DATABASE = {
 
   now: {
     ticker: 'NOW', name: 'ServiceNow', sector: '科技', industry: '软件',
-    cap: 'Large', price: 1080.0, change: 0.0,
+    cap: 'Large', price: 0, change: 0,
     tech: 5, fund: 5, heat: 7, catalyst: 5, comp: 4.4,
     position: 'watch',
     description: 'AI Agent工作流+Q1超预期',
@@ -194,7 +194,7 @@ const STOCK_DATABASE = {
 
   pltr: {
     ticker: 'PLTR', name: 'Palantir', sector: '科技', industry: '软件',
-    cap: 'Large', price: 133.28, change: 0.0,
+    cap: 'Large', price: 0, change: 0,
     tech: 4, fund: 4, heat: 8, catalyst: 5, comp: 4.3,
     position: 'watch',
     description: 'AIP政府订单+企业AI应用落地',
@@ -208,7 +208,7 @@ const STOCK_DATABASE = {
 
   cost: {
     ticker: 'COST', name: 'Costco', sector: '消费防御', industry: '零售',
-    cap: 'Mega', price: 1034.74, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 5, fund: 5, heat: 7, catalyst: 4, comp: 4.3,
     position: 'watch',
     description: '会员制零售+成长防御双属性',
@@ -222,7 +222,7 @@ const STOCK_DATABASE = {
 
   mrvl: {
     ticker: 'MRVL', name: 'Marvell Tech', sector: '科技', industry: '半导体',
-    cap: 'Large', price: 85.0, change: 0.0,
+    cap: 'Large', price: 0, change: 0,
     tech: 4, fund: 4, heat: 7, catalyst: 5, comp: 4.2,
     position: 'watch',
     description: '定制AI芯片(AISC)新爆款',
@@ -236,7 +236,7 @@ const STOCK_DATABASE = {
 
   orcl: {
     ticker: 'ORCL', name: 'Oracle', sector: '科技', industry: '软件',
-    cap: 'Large', price: 198.75, change: 0.0,
+    cap: 'Large', price: 0, change: 0,
     tech: 5, fund: 4, heat: 7, catalyst: 4, comp: 4.2,
     position: 'watch',
     description: '云基建+AI订单大增+4.7%',
@@ -250,7 +250,7 @@ const STOCK_DATABASE = {
 
   wmt: {
     ticker: 'WMT', name: 'Walmart', sector: '消费防御', industry: '零售',
-    cap: 'Mega', price: 132.12, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 5, fund: 5, heat: 6, catalyst: 4, comp: 4.2,
     position: 'watch',
     description: '电商转型+AI供应链优化',
@@ -264,7 +264,7 @@ const STOCK_DATABASE = {
 
   amat: {
     ticker: 'AMAT', name: 'Applied Materials', sector: '科技', industry: '半导体设备',
-    cap: 'Large', price: 444.74, change: 0.0,
+    cap: 'Large', price: 0, change: 0,
     tech: 5, fund: 4, heat: 7, catalyst: 4, comp: 4.1,
     position: 'watch',
     description: 'AI投资扩产，设备龙头受益',
@@ -278,7 +278,7 @@ const STOCK_DATABASE = {
 
   anet: {
     ticker: 'ANET', name: 'Arista Networks', sector: '科技', industry: '通信设备',
-    cap: 'Large', price: 110.0, change: 0.0,
+    cap: 'Large', price: 0, change: 0,
     tech: 5, fund: 5, heat: 6, catalyst: 4, comp: 4.1,
     position: 'watch',
     description: '数据中心网络冠军',
@@ -292,7 +292,7 @@ const STOCK_DATABASE = {
 
   googl: {
     ticker: 'GOOGL', name: 'Alphabet', sector: '科技', industry: '互联网',
-    cap: 'Mega', price: 401.7, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 5, fund: 5, heat: 7, catalyst: 3, comp: 4.0,
     position: 'watch',
     description: 'Gemini+Google Cloud AI',
@@ -306,7 +306,7 @@ const STOCK_DATABASE = {
 
   amzn: {
     ticker: 'AMZN', name: 'Amazon', sector: '科技', industry: '电商/云',
-    cap: 'Mega', price: 268.36, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 4, fund: 5, heat: 7, catalyst: 3, comp: 3.9,
     position: 'light',
     description: 'AWS AI需求+成本优化',
@@ -320,7 +320,7 @@ const STOCK_DATABASE = {
 
   pg: {
     ticker: 'PG', name: 'Procter & Gamble', sector: '消费防御', industry: '消费品',
-    cap: 'Mega', price: 143.71, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 4, fund: 5, heat: 5, catalyst: 3, comp: 3.9,
     position: 'light',
     description: '消费刚需+涨价传导+股息3.0%',
@@ -334,7 +334,7 @@ const STOCK_DATABASE = {
 
   mu: {
     ticker: 'MU', name: 'Micron', sector: '科技', industry: '半导体',
-    cap: 'Large', price: 786.3, change: 0.0,
+    cap: 'Large', price: 0, change: 0,
     tech: 4, fund: 4, heat: 6, catalyst: 4, comp: 3.8,
     position: 'light',
     description: 'HBM3E高增长+存储周期上行',
@@ -348,7 +348,7 @@ const STOCK_DATABASE = {
 
   amd: {
     ticker: 'AMD', name: 'AMD', sector: '科技', industry: '半导体',
-    cap: 'Large', price: 449.14, change: 0.0,
+    cap: 'Large', price: 0, change: 0,
     tech: 4, fund: 4, heat: 6, catalyst: 4, comp: 3.8,
     position: 'light',
     description: 'MI300追赶NVDA',
@@ -362,7 +362,7 @@ const STOCK_DATABASE = {
 
   ko: {
     ticker: 'KO', name: 'Coca-Cola', sector: '消费防御', industry: '饮料',
-    cap: 'Mega', price: 80.89, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 4, fund: 5, heat: 6, catalyst: 3, comp: 3.8,
     position: 'light',
     description: '全球品牌+股息王者+股息2.6%',
@@ -376,7 +376,7 @@ const STOCK_DATABASE = {
 
   xom: {
     ticker: 'XOM', name: 'ExxonMobil', sector: '能源', industry: '油气',
-    cap: 'Mega', price: 152.19, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 4, fund: 4, heat: 6, catalyst: 4, comp: 3.7,
     position: 'light',
     description: '油价高位+回购强劲+股息2.7%',
@@ -390,7 +390,7 @@ const STOCK_DATABASE = {
 
   gs: {
     ticker: 'GS', name: 'Goldman Sachs', sector: '金融', industry: '投行',
-    cap: 'Mega', price: 580.0, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 4, fund: 4, heat: 5, catalyst: 4, comp: 3.6,
     position: 'light',
     description: '投行复苏+AI布局',
@@ -404,7 +404,7 @@ const STOCK_DATABASE = {
 
   cvx: {
     ticker: 'CVX', name: 'Chevron', sector: '能源', industry: '油气',
-    cap: 'Mega', price: 186.28, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 4, fund: 4, heat: 5, catalyst: 3, comp: 3.5,
     position: 'light',
     description: '能源整合+股东回报+股息3.8%',
@@ -418,7 +418,7 @@ const STOCK_DATABASE = {
 
   jpm: {
     ticker: 'JPM', name: 'JPMorgan Chase', sector: '金融', industry: '银行',
-    cap: 'Mega', price: 302.78, change: 0.0,
+    cap: 'Mega', price: 0, change: 0,
     tech: 3, fund: 5, heat: 6, catalyst: 3, comp: 3.3,
     position: 'light',
     description: '全能银行+AI应用',

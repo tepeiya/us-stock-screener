@@ -1,6 +1,6 @@
 {
-  "version": "2.2.0",
+  "version": "2.3.0",
   "buildDate": "2026-05-16",
-  "changelog": "重置涨跌幅为0，标注数据非实时；用户点击💵实时跳转Google Finance查看最新价",
+  "changelog": "定位调整：选股器回归分析工具，清除伪实时数据。实时行情通过点击💵实时行情跳转Google Finance查看",
   "forceUpdate": true
 }

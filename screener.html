@@ -104,7 +104,7 @@
     <span class="icon">📊</span>
     <span>美股选股器 <span style="font-size:12px; color:#58a6ff; background:rgba(88,166,255,0.15); padding:0 6px; border-radius:4px">v2</span></span>
   </div>
-  <div class="app-subtitle">选股 → 买入 → 持有监控 → 退场信号</div>
+  <div class="app-subtitle">选股分析工具 · 综合评分+退场信号+13F追踪+财报日历</div>
 </header>
 
 <!-- ======== Tab Bar ======== -->
@@ -145,7 +145,7 @@
 </div>
 
 <div class="disclaimer">
-  ⚠️ 以上内容仅供参考，不构成投资建议。数据来源：Finviz + 30个社交热度源 + 13F filings。
+  ⚠️ 分析决策工具·不构成投资建议 · 数据来源: Finviz + SEC 13F + Twitter/X · 💵实时行情请点击个股详情底部按钮跳转查看
 </div>
 
 <script src="screener-data.js?v=2.2.0"></script>
@@ -290,12 +290,10 @@ function renderResults() {
         <div class="stock-catalyst">💡 ${s.description}</div>
         <div class="stock-risk">⚠️ ${s.risk}</div>
         <div style="margin-top:6px; display:flex; gap:6px; align-items:center">
-          <span style="font-size:12px; font-weight:600">$${s.price.toFixed(2)}</span>
+          <span style="font-size:11px; color:#8b949e">📊 综合${s.comp.toFixed(1)} · 🔥${s.heat}/10</span>
           <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="event.stopPropagation();window.open('https://finviz.com/quote.ashx?t=${s.ticker}','_blank')">📈 K线</span>
           <span style="font-size:11px; color:#8b949e">|</span>
-          <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="event.stopPropagation();window.open('https://www.tradingview.com/chart/?symbol=${s.ticker}','_blank')">📊 深度</span>
-          <span style="font-size:11px; color:#8b949e">|</span>
-          <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="event.stopPropagation();window.open('https://www.google.com/finance/quote/${s.ticker}:NASDAQ','_blank')">💵 实时</span>
+          <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="event.stopPropagation();window.open('https://www.google.com/finance/quote/${s.ticker}:NASDAQ','_blank')">💵 实时价</span>
           ${s.earnings_date ? `<span style="font-size:11px; color:#8b949e">|</span>
           <span style="font-size:11px; color:#d29922">📅 ${s.earnings_date}</span>` : ''}
         </div>
@@ -706,35 +704,33 @@ function showDetail(ticker) {
     <div class="stock-risk">${s.risk}</div>
   </div>`;
   
-  // 跳转K线
+  // 跳转外部工具
   const tickerLow = s.ticker.toLowerCase();
   html += `<div style="display:flex; gap:8px; padding:8px 12px">
     <button class="btn btn-secondary" onclick="window.open('https://finviz.com/quote.ashx?t=${s.ticker}&p=d','_blank')" style="flex:1; justify-content:center">
       📈 Finviz K线
     </button>
+    <button class="btn btn-secondary" onclick="window.open('https://www.google.com/finance/quote/${s.ticker}:NASDAQ','_blank')" style="flex:1; justify-content:center">
+      💵 实时行情
+    </button>
     <button class="btn btn-secondary" onclick="window.open('https://www.tradingview.com/chart/?symbol=${s.ticker}','_blank')" style="flex:1; justify-content:center">
       📊 TradingView
     </button>
-    <button class="btn btn-secondary" onclick="window.open('https://www.google.com/finance/quote/${s.ticker}:NASDAQ','_blank')" style="flex:1; justify-content:center">
-      💵 实时价
-    </button>
   </div>`;
   
-  // 实时行情迷你面板（通过Google Finance小部件）
-  // 如果Ticker不是NASDAQ可以手动调整交易所
-  const exchange = s.sector === '科技' || s.sector === '消费防御' || s.sector === '金融' ? 'NASDAQ' : 'NYSE';
+  // 实时行情 -> 数据来源说明
   html += `<div style="margin:0 12px 8px; padding:10px 14px; background:#1c2333; border:1px solid #30363d; border-radius:10px; text-align:center">
-    <div style="font-size:11px; color:#8b949e; margin-bottom:6px">💹 实时行情（Google Finance）</div>
-    <div style="font-size:28px; font-weight:700; color:${s.change >= 0 ? '#3fb950' : '#f85149'}">$${s.price.toFixed(2)}</div>
-    <div style="display:flex; justify-content:center; gap:16px; margin-top:6px; font-size:13px">
-      <span style="color:#8b949e">今日 <strong style="color:${s.change >= 0 ? '#3fb950' : '#f85149'}">${s.change >= 0 ? '+' : ''}${s.change.toFixed(2)}%</strong></span>
-      <span style="color:#8b949e">热度 <strong style="color:#f97316">${s.heat}/10 ${fires(s.heat)}</strong></span>
-      <span style="color:#8b949e">综合 <strong style="color:${scoreColor(s.comp)}">${s.comp.toFixed(1)}</strong></span>
+    <div style="font-size:12px; color:#8b949e; margin-bottom:6px">📌 选股器是分析决策工具</div>
+    <div style="font-size:13px; color:#e6edf3; margin-bottom:4px">
+      综合评分 ${s.comp.toFixed(1)} ${stars(s.tech)} · 社交热度 ${s.heat}/10 ${fires(s.heat)}
     </div>
-    <div style="margin-top:8px">
-      <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="window.open('https://www.google.com/finance/quote/${s.ticker}:${exchange}','_blank')" target="_blank">
-        🔗 查看Google Finance实时行情 →
-      </span>
+    <div style="font-size:11px; color:#8b949e">
+      💡 实时行情请点击底部 <strong style="color:#58a6ff">💵 实时行情</strong> 按钮跳转查看
+    </div>
+    <div style="margin-top:6px; display:flex; justify-content:center; gap:12px">
+      <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="window.open('https://finviz.com/quote.ashx?t=${s.ticker}','_blank')">📈 日K线</span>
+      <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="window.open('https://www.tradingview.com/chart/?symbol=${s.ticker}','_blank')">📊 技术分析</span>
+      <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="window.open('https://www.google.com/finance/quote/${s.ticker}:NASDAQ','_blank')">💵 实时价</span>
     </div>
   </div>`;
   
