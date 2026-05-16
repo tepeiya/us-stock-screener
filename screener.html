@@ -457,7 +457,7 @@ function renderFunds() {
           <div class="fund-name">${f.name}</div>
           <div class="fund-house">${f.fund} · ${f.last_updated}</div>
         </div>
-        ${f.portfolio_value ? `<span style="font-size:11px; color:${isDetailed ? '#d29922' : '#8b949e'}">组合 ${f.portfolio_value}${f.positions ? ' · ' + f.positions + '只' : ''}</span>` : ''}
+        ${f.portfolio_value ? `<span style="font-size:11px; color:#d29922">组合 ${f.portfolio_value}${f.positions ? ' · ' + f.positions + '只' : ''}</span>` : ''}
       </div>`;
     
     if (isDetailed) {
