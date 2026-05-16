@@ -1,6 +1,6 @@
 {
-  "version": "2.1.1",
-  "buildDate": "2026-05-15",
-  "changelog": "更新13F：添加Renaissance Technologies Q1最新持仓，调整对应股票的大佬持股数据",
-  "forceUpdate": false
+  "version": "2.2.0",
+  "buildDate": "2026-05-16",
+  "changelog": "重置涨跌幅为0，标注数据非实时；用户点击💵实时跳转Google Finance查看最新价",
+  "forceUpdate": true
 }
