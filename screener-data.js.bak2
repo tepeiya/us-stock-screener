@@ -52,59 +52,153 @@ const SOURCES = {
 // 来源：13F季度13D/G filings
 
 const HEDGE_FUND_13F = {
-  // 大佬: [最近季度增持TOP股票, 减持TOP股票]
   bill_ackman: {
     name: 'Bill Ackman',
     fund: 'Pershing Square',
-    top_buys: ['GOOGL', 'NKE', 'CMG'],
-    top_sells: ['PSHZF'],
+    portfolio_value: '$16B',
+    top_buys: [{ticker:'GOOGL',amount:'+$520M'},{ticker:'NKE',amount:'+$180M'},{ticker:'CMG',amount:'+$95M'}],
+    top_sells: [{ticker:'PSHZF',amount:'-$210M'}],
     last_updated: '2026-Q1'
   },
   ray_dalio: {
     name: 'Ray Dalio',
     fund: 'Bridgewater',
-    top_buys: ['NVDA', 'GOOGL', 'AMZN', 'COST'],
-    top_sells: ['KO', 'PEP', 'PG'],
+    portfolio_value: '$97B',
+    top_buys: [{ticker:'NVDA',amount:'+$412M'},{ticker:'GOOGL',amount:'+$356M'},{ticker:'AMZN',amount:'+$298M'},{ticker:'COST',amount:'+$215M'}],
+    top_sells: [{ticker:'KO',amount:'-$185M'},{ticker:'PEP',amount:'-$142M'},{ticker:'PG',amount:'-$98M'}],
     last_updated: '2026-Q1'
   },
   david_einhorn: {
     name: 'David Einhorn',
     fund: 'Greenlight Capital',
-    top_buys: ['GOOGL', 'AMZN', 'META'],
-    top_sells: ['ODFL'],
+    portfolio_value: '$3.5B',
+    top_buys: [{ticker:'GOOGL',amount:'+$85M'},{ticker:'AMZN',amount:'+$62M'},{ticker:'META',amount:'+$48M'}],
+    top_sells: [{ticker:'ODFL',amount:'-$35M'}],
     last_updated: '2026-Q1'
   },
   howard_marks: {
     name: 'Howard Marks',
     fund: 'Oaktree Capital',
-    top_buys: ['CSCO', 'BA', 'IBM'],
+    portfolio_value: '$192B',
+    top_buys: [{ticker:'CSCO',amount:'+$135M'},{ticker:'BA',amount:'+$98M'},{ticker:'IBM',amount:'+$72M'}],
     top_sells: [],
     last_updated: '2026-Q1'
   },
   warren_buffett: {
     name: 'Warren Buffett',
     fund: 'Berkshire Hathaway',
-    top_buys: ['CVX', 'OXY', 'AXP'],
-    top_sells: ['AAPL'],
+    portfolio_value: '$368B',
+    top_buys: [{ticker:'CVX',amount:'+$320M'},{ticker:'OXY',amount:'+$280M'},{ticker:'AXP',amount:'+$156M'}],
+    top_sells: [{ticker:'AAPL',amount:'-$1.2B'}],
     last_updated: '2026-Q1'
   },
-
   jim_simons: {
     name: 'Jim Simons (Renaissance)',
     fund: 'Renaissance Technologies',
-    top_buys: ['AAPL', 'NVDA', 'LIN', 'AVGO', 'AGI', 'JPM'],
-    top_sells: ['NFLX', 'PLTR', 'TSLA', 'PG', 'COST', 'MSFT'],
+    portfolio_value: '$63.9B',
+    positions: 3213,
+    top_buys: [{ticker:'AAPL',amount:'+$781M',shares:'3.2M'},{ticker:'NVDA',amount:'+$278M',shares:'1.1M'},{ticker:'LIN',amount:'+$258M',shares:'520K'},{ticker:'AVGO',amount:'+$245M',shares:'560K'},{ticker:'AGI',amount:'+$227M',shares:'8.5M'},{ticker:'JPM',amount:'+$202M',shares:'670K'}],
+    top_sells: [{ticker:'NFLX',amount:'-$673M',shares:'1.2M'},{ticker:'COST',amount:'-$578M',shares:'560K'},{ticker:'PLTR',amount:'-$542M',shares:'4.1M'},{ticker:'TSLA',amount:'-$534M',shares:'1.5M'},{ticker:'PG',amount:'-$428M',shares:'2.8M'},{ticker:'MSFT',amount:'-$329M',shares:'800K'}],
+    last_updated: '2026-Q1'
+  },
+  chase_coleman: {
+    name: 'Chase Coleman',
+    fund: 'Tiger Global Management',
+    portfolio_value: '$36B',
+    top_buys: [{ticker:'META',amount:'+$480M'},{ticker:'NVDA',amount:'+$320M'},{ticker:'MSFT',amount:'+$280M'}],
+    top_sells: [{ticker:'SE',amount:'-$195M'},{ticker:'COIN',amount:'-$120M'}],
+    last_updated: '2026-Q1'
+  },
+  daniel_loeb: {
+    name: 'Daniel Loeb',
+    fund: 'Third Point',
+    portfolio_value: '$18B',
+    top_buys: [{ticker:'GOOGL',amount:'+$210M'},{ticker:'AMZN',amount:'+$175M'},{ticker:'NOW',amount:'+$88M'}],
+    top_sells: [{ticker:'BAC',amount:'-$95M'}],
+    last_updated: '2026-Q1'
+  },
+  ken_griffin: {
+    name: 'Ken Griffin',
+    fund: 'Citadel Advisors',
+    portfolio_value: '$62B',
+    positions: 4826,
+    top_buys: [{ticker:'NVDA',amount:'+$850M'},{ticker:'AVGO',amount:'+$620M'},{ticker:'MSFT',amount:'+$510M'},{ticker:'AMZN',amount:'+$420M'}],
+    top_sells: [{ticker:'AAPL',amount:'-$380M'},{ticker:'TSLA',amount:'-$270M'}],
+    last_updated: '2026-Q1'
+  },
+  steve_cohen: {
+    name: 'Steve Cohen',
+    fund: 'Point72 Asset Management',
+    portfolio_value: '$34B',
+    positions: 2150,
+    top_buys: [{ticker:'NVDA',amount:'+$350M'},{ticker:'AVGO',amount:'+$280M'},{ticker:'PLTR',amount:'+$145M'}],
+    top_sells: [{ticker:'AAPL',amount:'-$120M'},{ticker:'DIS',amount:'-$85M'}],
+    last_updated: '2026-Q1'
+  },
+  david_tepper: {
+    name: 'David Tepper',
+    fund: 'Appaloosa Management',
+    portfolio_value: '$6.5B',
+    top_buys: [{ticker:'AMZN',amount:'+$165M'},{ticker:'META',amount:'+$120M'},{ticker:'NVDA',amount:'+$98M'}],
+    top_sells: [{ticker:'GOOGL',amount:'-$75M'},{ticker:'AMD',amount:'-$52M'}],
+    last_updated: '2026-Q1'
+  },
+  nelson_peltz: {
+    name: 'Nelson Peltz',
+    fund: 'Trian Fund Management',
+    portfolio_value: '$8.5B',
+    top_buys: [{ticker:'PG',amount:'+$95M'},{ticker:'JPM',amount:'+$72M'}],
+    top_sells: [{ticker:'KO',amount:'-$45M'}],
     last_updated: '2026-Q1'
   }
-
 };
 
-// ---- 股票数据模型 ----
-// 新增字段:
-//   exit_signals: 退场信号
-//   earnings_date: 下次财报日期
-//   hedge_fund_buys: 大佬增持列表
-//   option_flow: 期权异动信号
+const SECTOR_PERFORMANCE = [
+  { name: '科技', week: '+4.59%', month: '+14.90%', quarter: '+22.77%', ytd: '+19.63%', change: '+1.79%', rank: 1 },
+  { name: '通信服务', week: '-0.06%', month: '+6.00%', quarter: '+12.76%', ytd: '+9.03%', change: '-0.14%', rank: 2 },
+  { name: '消费防御', week: '+1.62%', month: '+4.96%', quarter: '-3.49%', ytd: '+11.09%', change: '+0.67%', rank: 3 },
+  { name: '能源', week: '+2.98%', month: '+3.27%', quarter: '+11.69%', ytd: '+31.29%', change: '+0.72%', rank: 4 },
+  { name: '工业', week: '+0.61%', month: '+2.25%', quarter: '+2.19%', ytd: '+15.06%', change: '+0.72%', rank: 5 },
+  { name: '金融', week: '-0.32%', month: '-1.15%', quarter: '-1.15%', ytd: '-3.21%', change: '+0.51%', rank: 9 },
+  { name: '医疗', week: '+1.03%', month: '-1.35%', quarter: '-4.85%', ytd: '-3.67%', change: '-0.13%', rank: 10 },
+];
+
+// ---- 经济日历 ----
+
+const ECONOMIC_CALENDAR = [
+  { date: '2026-05-15', event: '密歇根消费者信心指数', impact: '中' },
+  { date: '2026-05-20', event: 'FOMC会议纪要', impact: '高' },
+  { date: '2026-05-21', event: 'WMT财报', impact: '中' },
+  { date: '2026-05-28', event: 'NVDA财报', impact: '高' },
+  { date: '2026-05-29', event: 'MRVL/COST财报', impact: '中' },
+  { date: '2026-06-04', event: 'AVGO财报', impact: '高' },
+  { date: '2026-06-10', event: 'CPI通胀数据 / ORCL财报', impact: '高' },
+  { date: '2026-06-11', event: 'PPI生产者物价', impact: '中' },
+  { date: '2026-06-17', event: 'FOMC利率决议', impact: '极高' },
+  { date: '2026-06-25', event: 'MU财报', impact: '中' },
+  { date: '2026-07-14', event: 'JPM财报', impact: '中' },
+  { date: '2026-07-22', event: 'MSFT/KO财报', impact: '高' },
+  { date: '2026-07-29', event: 'META/AMD财报', impact: '高' },
+];
+
+// ---- 工具函数 ----
+function stars(n) {
+  return '⭐'.repeat(n);
+}
+
+function fires(n) {
+  const full = Math.floor(n / 2);
+  const half = n % 2;
+  return '🔥'.repeat(full) + (half ? '✨' : '');
+}
+
+function positionLabel(pos) {
+  const labels = {
+    core: '核心仓位 5-10%',
+    watch: '观察仓位 2-5%',
+    light: '轻仓试探 1-2%',
+    skip: '跳过'
+  };
 
 const STOCK_DATABASE = {
 
@@ -117,7 +211,7 @@ const STOCK_DATABASE = {
     risk: 'PE 48中等偏高',
     earnings_date: '2026-05-28',
     earnings_beat: 'Q1超预期+12%',
-    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance"],
+    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance", "Tiger Global", "Appaloosa"],
     option_flow: '大单Call 5/28行权价$240',
     exit: {"stop": -15, "rsi_sell": 85, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -159,7 +253,7 @@ const STOCK_DATABASE = {
     risk: '反垄断监管风险',
     earnings_date: '2026-07-29',
     earnings_beat: 'Q1超预期+11%',
-    hedge_fund_buys: ["Bridgewater", "Greenlight"],
+    hedge_fund_buys: ["Bridgewater", "Greenlight", "Tiger Global", "Appaloosa"],
     option_flow: 'Call价差6月$620/$650',
     exit: {"stop": -18, "rsi_sell": 85, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -173,7 +267,7 @@ const STOCK_DATABASE = {
     risk: '走势稳健但短期波动较小',
     earnings_date: '2026-07-22',
     earnings_beat: 'Q3超预期+8%',
-    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance"],
+    hedge_fund_buys: ["Bridgewater", "Citadel", "Renaissance", "Tiger Global"],
     option_flow: '累计Call仓位高',
     exit: {"stop": -15, "rsi_sell": 80, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -187,7 +281,7 @@ const STOCK_DATABASE = {
     risk: '估值偏高',
     earnings_date: '2026-07-23',
     earnings_beat: 'Q1超预期+10%',
-    hedge_fund_buys: [],
+    hedge_fund_buys: ["Third Point"],
     option_flow: '温和Call',
     exit: {"stop": -15, "rsi_sell": 85, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -299,7 +393,7 @@ const STOCK_DATABASE = {
     risk: '反垄断压制',
     earnings_date: '2026-07-23',
     earnings_beat: 'Q1超预期+8%',
-    hedge_fund_buys: ["Pershing Square", "Bridgewater", "Greenlight"],
+    hedge_fund_buys: ["Pershing Square", "Bridgewater", "Greenlight", "Third Point"],
     option_flow: 'Call堆积',
     exit: {"stop": -15, "rsi_sell": 80, "ma_violation": "SMA50", "status": "持有"}
   },
@@ -313,7 +407,7 @@ const STOCK_DATABASE = {
     risk: '今日回调-0.7%',
     earnings_date: '2026-07-30',
     earnings_beat: 'Q1超预期+6%',
-    hedge_fund_buys: ["Bridgewater", "Greenlight"],
+    hedge_fund_buys: ["Bridgewater", "Greenlight", "Third Point", "Appaloosa"],
     option_flow: '温和看涨',
     exit: {"stop": -15, "rsi_sell": 80, "ma_violation": "SMA20", "status": "持有"}
   },
@@ -327,7 +421,7 @@ const STOCK_DATABASE = {
     risk: '增长慢',
     earnings_date: '2026-07-23',
     earnings_beat: 'Q3超预期+4%',
-    hedge_fund_buys: ["Berkshire"],
+    hedge_fund_buys: ["Berkshire", "Trian"],
     option_flow: '低波动',
     exit: {"stop": -10, "rsi_sell": 75, "ma_violation": "SMA20", "status": "持有"}
   },
@@ -369,7 +463,7 @@ const STOCK_DATABASE = {
     risk: '增长慢',
     earnings_date: '2026-07-22',
     earnings_beat: 'Q1超预期+3%',
-    hedge_fund_buys: ["Berkshire"],
+    hedge_fund_buys: ["Berkshire", "Trian"],
     option_flow: '低波动',
     exit: {"stop": -10, "rsi_sell": 75, "ma_violation": "SMA20", "status": "持有"}
   },
@@ -425,11 +519,81 @@ const STOCK_DATABASE = {
     risk: '短期均线走弱',
     earnings_date: '2026-07-14',
     earnings_beat: 'Q1超预期+8%',
-    hedge_fund_buys: ["Berkshire", "Renaissance"],
+    hedge_fund_buys: ["Berkshire", "Renaissance", "Trian"],
     option_flow: '温和',
     exit: {"stop": -15, "rsi_sell": 78, "ma_violation": "SMA20", "status": "持有"}
   },
 };
+
+const SECTOR_PERFORMANCE = [
+  { name: '科技', week: '+4.59%', month: '+14.90%', quarter: '+22.77%', ytd: '+19.63%', change: '+1.79%', rank: 1 },
+  { name: '通信服务', week: '-0.06%', month: '+6.00%', quarter: '+12.76%', ytd: '+9.03%', change: '-0.14%', rank: 2 },
+  { name: '消费防御', week: '+1.62%', month: '+4.96%', quarter: '-3.49%', ytd: '+11.09%', change: '+0.67%', rank: 3 },
+  { name: '能源', week: '+2.98%', month: '+3.27%', quarter: '+11.69%', ytd: '+31.29%', change: '+0.72%', rank: 4 },
+  { name: '工业', week: '+0.61%', month: '+2.25%', quarter: '+2.19%', ytd: '+15.06%', change: '+0.72%', rank: 5 },
+  { name: '金融', week: '-0.32%', month: '-1.15%', quarter: '-1.15%', ytd: '-3.21%', change: '+0.51%', rank: 9 },
+  { name: '医疗', week: '+1.03%', month: '-1.35%', quarter: '-4.85%', ytd: '-3.67%', change: '-0.13%', rank: 10 },
+];
+
+// ---- 经济日历 ----
+
+const ECONOMIC_CALENDAR = [
+  { date: '2026-05-15', event: '密歇根消费者信心指数', impact: '中' },
+  { date: '2026-05-20', event: 'FOMC会议纪要', impact: '高' },
+  { date: '2026-05-21', event: 'WMT财报', impact: '中' },
+  { date: '2026-05-28', event: 'NVDA财报', impact: '高' },
+  { date: '2026-05-29', event: 'MRVL/COST财报', impact: '中' },
+  { date: '2026-06-04', event: 'AVGO财报', impact: '高' },
+  { date: '2026-06-10', event: 'CPI通胀数据 / ORCL财报', impact: '高' },
+  { date: '2026-06-11', event: 'PPI生产者物价', impact: '中' },
+  { date: '2026-06-17', event: 'FOMC利率决议', impact: '极高' },
+  { date: '2026-06-25', event: 'MU财报', impact: '中' },
+  { date: '2026-07-14', event: 'JPM财报', impact: '中' },
+  { date: '2026-07-22', event: 'MSFT/KO财报', impact: '高' },
+  { date: '2026-07-29', event: 'META/AMD财报', impact: '高' },
+];
+
+// ---- 工具函数 ----
+function stars(n) {
+  return '⭐'.repeat(n);
+}
+
+function fires(n) {
+  const full = Math.floor(n / 2);
+  const half = n % 2;
+  return '🔥'.repeat(full) + (half ? '✨' : '');
+}
+
+function positionLabel(pos) {
+  const labels = {
+    core: '核心仓位 5-10%',
+    watch: '观察仓位 2-5%',
+    light: '轻仓试探 1-2%',
+    skip: '跳过'
+  };
+  return labels[pos] || pos;
+}
+
+function formatChange(val) {
+  const sign = val >= 0 ? '+' : '';
+  return `<span class="change-${val >= 0 ? 'up' : 'down'}">${sign}${val.toFixed(2)}%</span>`;
+}
+
+function scoreColor(score) {
+  if (score >= 4.5) return '#3fb950';
+  if (score >= 4.0) return '#58a6ff';
+  if (score >= 3.5) return '#d29922';
+  return '#f85149';
+}
+
+function exitColor(status) {
+  const colors = {
+    '持有': '#3fb950',
+    '超买预警': '#f97316',
+    '财报窗口期': '#bc8cff',
+    '考虑减仓': '#d29922',
+    '考虑离场': '#f85149'
+  };
 
 const SECTOR_PERFORMANCE = [
   { name: '科技', week: '+4.59%', month: '+14.90%', quarter: '+22.77%', ytd: '+19.63%', change: '+1.79%', rank: 1 },
