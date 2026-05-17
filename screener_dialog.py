@@ -72,6 +72,12 @@ stocks = [
     {"r":23,"t":"JPM","n":"JPMorgan","ind":"银行","sec":"金融","tl":3,"fl":5,"h":6,"cl":3,"c":3.3,"pos":"light",
      "desc":"全能银行+AI","risk":"均线走弱","stop":"$257.4","rsi":78,"ma":"SMA20","sts":"持有",
      "funds":"Berkshire, Renaissance, Trian","ed":"07-14","ed_d":60},
+    {"r":24,"t":"BE","n":"Bloom Energy","ind":"电力","sec":"科技","tl":5,"fl":4,"h":8,"cl":5,"c":4.3,"pos":"watch",
+     "desc":"AI电力层瓶颈+Oracle 2.8GW+扭亏","risk":"1年涨12倍","stop":"$206.5","rsi":82,"ma":"SMA50","sts":"持有",
+     "funds":"-","ed":"-","ed_d":-1},
+    {"r":25,"t":"VRT","n":"Vertiv","ind":"液冷散热","sec":"科技","tl":5,"fl":5,"h":8,"cl":5,"c":4.5,"pos":"watch",
+     "desc":"液冷龙头+散热刚需+刚入S&P500","risk":"PE 93","stop":"$280.0","rsi":82,"ma":"SMA50","sts":"持有",
+     "funds":"-","ed":"-","ed_d":-1},
 ]
 
 stocks.sort(key=lambda s: -s["c"])

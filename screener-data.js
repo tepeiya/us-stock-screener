@@ -421,6 +421,35 @@ const STOCK_DATABASE = {
     option_flow: '温和',
     exit: {"stop": -15, "rsi_sell": 78, "ma_violation": "SMA20", "status": "持有"}
   },
+
+// ---- AI超级周期 新增标的 ----
+  be: {
+    ticker: 'BE', name: 'Bloom Energy', sector: '科技', industry: '电力/燃料电池',
+    cap: 'Large', price: 0, change: 0,
+    tech: 5, fund: 4, heat: 8, catalyst: 5, comp: 4.3,
+    position: 'watch',
+    description: 'AI电力层瓶颈+Oracle 2.8GW大单+扭亏为盈',
+    risk: '1年涨1292%/PB 85极高/今日-9%回调',
+    earnings_date: '',
+    earnings_beat: '',
+    hedge_fund_buys: [],
+    option_flow: '回调关注',
+    exit: {"stop": -25, "rsi_sell": 82, "ma_violation": "SMA50", "status": "持有"}
+  },
+
+  vrt: {
+    ticker: 'VRT', name: 'Vertiv', sector: '科技', industry: '液冷散热',
+    cap: 'Large', price: 0, change: 0,
+    tech: 5, fund: 5, heat: 8, catalyst: 5, comp: 4.5,
+    position: 'watch',
+    description: '液冷龙头+AI 1kW+/chip散热刚需+刚入S&P 500',
+    risk: 'PE 93较高/Forward PE 43/1年涨252%',
+    earnings_date: '',
+    earnings_beat: '',
+    hedge_fund_buys: [],
+    option_flow: '回调至SMA50关注',
+    exit: {"stop": -20, "rsi_sell": 82, "ma_violation": "SMA50", "status": "持有"}
+  },
 };
 
 const SECTOR_PERFORMANCE = [
