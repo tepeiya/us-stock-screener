@@ -88,7 +88,11 @@ const HEDGE_FUND_13F = {
     top_sells:[],last_updated:'2026-Q1'},
   nelson_peltz: {name:'Nelson Peltz',fund:'Trian',portfolio_value:'$8.5B',
     top_buys:[{ticker:'PG',amount:'+$95M'},{ticker:'JPM',amount:'+$72M'}],
-    top_sells:[],last_updated:'2026-Q1'}
+    top_sells:[],last_updated:'2026-Q1'},
+  leopold_aschenbrenner: {name:'Leopold Aschenbrenner (SAF)',fund:'Situational Awareness LP',portfolio_value:'$10B+',
+    top_buys:[{ticker:'BE',amount:'$879M'},{ticker:'SNDK',amount:'$724M'},{ticker:'CRWV',amount:'$556M'},{ticker:'IREN',amount:'$401M'},{ticker:'CLSK',amount:'+648%'},{ticker:'RIOT',amount:'+87%'}],
+    top_sells:[{ticker:'NVDA (Put)',amount:'-$1.57B'},{ticker:'AVGO (Put)',amount:'-$1.01B'},{ticker:'AMD (Put)',amount:'-$969M'},{ticker:'SMH (Put)',amount:'-$2.04B'},{ticker:'ORCL (Put)',amount:'-$1.07B'},{ticker:'LITE',amount:'-$479M'}],
+    last_updated:'2026-Q1'}
 };
 
 // ---- 股票数据模型 ----
@@ -608,4 +612,25 @@ const ARK_DATA = {
       ]
     },
   ]
+,
+  leopold_aschenbrenner: {
+    name: 'Leopold Aschenbrenner (SAF)',
+    fund: 'Situational Awareness LP',
+    portfolio_value: '$10B+',
+    positions: 25,
+    top_buys: [
+      {ticker:'BE',amount:'$879M'},{ticker:'SNDK',amount:'$724M'},{ticker:'CRWV',amount:'$556M'},
+      {ticker:'IREN',amount:'$401M'},{ticker:'CORZ',amount:'$389M'},{ticker:'CLSK',amount:'+648%'},
+      {ticker:'RIOT',amount:'+87%'},{ticker:'TE',amount:'new'},{ticker:'SHAZ',amount:'new'},
+      {ticker:'HIVE',amount:'new'}
+    ],
+    top_sells: [
+      {ticker:'NVDA (Put)',amount:'$1.57B'},{ticker:'AVGO (Put)',amount:'$1.01B'},
+      {ticker:'AMD (Put)',amount:'$969M'},{ticker:'MU (Put)',amount:'$584M'},
+      {ticker:'TSM (Put)',amount:'$535M'},{ticker:'ORCL (Put)',amount:'$1.07B'},
+      {ticker:'SMH (Put)',amount:'$2.04B'},
+      {ticker:'LITE',amount:'-$479M (清仓)'},{ticker:'INTC Call',amount:'-$747M (清仓)'}
+    ],
+    last_updated: '2026-Q1'
+  }
 };

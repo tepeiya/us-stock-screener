@@ -450,6 +450,11 @@ function renderFunds() {
   let html = `<div class="section-title">🏛️ 13F大佬持仓 <span class="badge">2026-Q1</span></div>
   <div class="card" style="font-size:12px; margin-bottom:8px">
     来源：SEC 13F filings · 显示最新季度增减持TOP股票及金额
+    <div style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap">
+      <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="window.open('https://whalewisdom.com/filer/situational-awareness-lp','_blank')">🐋 WhaleWisdom →</span>
+      <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="window.open('https://quiverquant.com/institutions/Situational-Awareness-LP/','_blank')">📊 QuiverQuant →</span>
+      <span style="font-size:11px; color:#58a6ff; cursor:pointer" onclick="window.open('https://sec.gov/edgar/search/','_blank')">🏛️ SEC EDGAR →</span>
+    </div>
   </div>`;
   
   Object.values(HEDGE_FUND_13F).forEach(f => {
