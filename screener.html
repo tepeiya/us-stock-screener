@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="选股器">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="screener-style.css?v=20260521">
+  <link rel="stylesheet" href="screener-style.css?v=999">
   <style>
     /* v2 新增样式 */
     .exit-banner {
@@ -149,43 +149,10 @@
   ⚠️ 分析决策工具·不构成投资建议 · 数据来源: Finviz + SEC 13F + Twitter/X · 💵实时行情请点击个股详情底部按钮跳转查看
 </div>
 
-<script src="screener-data.js?v=20260521"></script>
+<script src="screener-data.js?v=999"></script>
 <script>
-// 清除所有旧Service Worker，确保加载最新版
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    regs.forEach(r => r.unregister());
-  });
-}}
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').then(reg => {
-    console.log('[SW] 注册成功');
-    
-    // 监听版本更新
-    reg.addEventListener('updatefound', () => {
-      const newWorker = reg.installing;
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          // 新版本已下载
-          if (confirm('📊 选股器有新版本可用！是否立即刷新应用？')) {
-            newWorker.postMessage({ type: 'SKIP_WAITING' });
-            window.location.reload();
-          }
-        }
-      });
-    });
-  }).catch(() => {});
-  
-  // 监听来自SW的消息
-  navigator.serviceWorker.addEventListener('message', event => {
-    if (event.data && event.data.type === 'VERSION_RESPONSE') {
-      const ver = event.data.data;
-      console.log('[SW] 服务器版本:', ver.version);
-    }
-  });
-}
 // ========================================
-// 美股选股器 v2.0 - 主程序
+// 美股选股器 - 主程序
 // ========================================
 
 let currentFilter = 'all';
