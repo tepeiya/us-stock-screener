@@ -553,84 +553,22 @@ function daysUntil(dateStr) {
 // 自动读取最新交易日报中的结构化数据
 // ========================================
 
+
 const ARK_DATA = {
-  // 每日交易摘要 (YYYY-MM-DD -> 交易列表)
-  // 由工具自动更新，前端展示
-  lastUpdated: '2026-05-16 16:18',
-  
-  // 最近5天交易汇总
+  lastUpdated: '2026-05-21 10:22',
   recentDays: [
-    {
-      date: '2026-05-15',
-      buys: [
-        {fund: 'ARKK', ticker: 'NTRA', amount: '$1.4M', price: '$186', shares: '7,526', pct: '1.69%'},
-      ],
-      sells: [
-        {fund: 'ARKK', ticker: 'TER', amount: '$12.6M', price: '$338', shares: '37,278', pct: '5.76%'},
-        {fund: 'ARKK', ticker: 'TSM', amount: '$18.5M', price: '$404', shares: '45,792', pct: '10.85%'},
-        {fund: 'ARKK', ticker: 'TWST', amount: '$816.3K', price: '$49', shares: '16,659', pct: '0.26%'},
-        {fund: 'ARKW', ticker: 'AMD', amount: '$5.8M', price: '$424', shares: '13,679', pct: '2.75%'},
-        {fund: 'ARKW', ticker: 'TSM', amount: '$5.8M', price: '$404', shares: '14,356', pct: '9.88%'},
-        {fund: 'ARKG', ticker: 'TWST', amount: '$59.4K', price: '$49', shares: '1,212', pct: '0.06%'},
-        {fund: 'ARKG', ticker: 'CDNA', amount: '$132.2K', price: '$20', shares: '6,610', pct: '0.36%'},
-      ]
-    },
-    {
-      date: '2026-05-14',
-      sells: [
-        {fund: 'ARKK', ticker: 'TWST', amount: '$564.1K', price: '$49', shares: '11,512', pct: '0.28%'},
-        {fund: 'ARKK', ticker: 'TSM', amount: '$11.6M', price: '$404', shares: '28,712', pct: '10.22%'},
-        {fund: 'ARKK', ticker: 'TER', amount: '$8.1M', price: '$338', shares: '23,964', pct: '5.56%'},
-        {fund: 'ARKW', ticker: 'TSM', amount: '$4.9M', price: '$404', shares: '12,128', pct: '9.15%'},
-        {fund: 'ARKW', ticker: 'AMD', amount: '$5.1M', price: '$424', shares: '12,028', pct: '2.71%'},
-        {fund: 'ARKG', ticker: 'TWST', amount: '$67.2K', price: '$49', shares: '1,371', pct: '0.07%'},
-        {fund: 'ARKG', ticker: 'ADPT', amount: '$465.0K', price: '$13', shares: '35,769', pct: '1.79%'},
-        {fund: 'ARKG', ticker: 'CDNA', amount: '$282.6K', price: '$20', shares: '14,130', pct: '0.75%'},
-      ]
-    },
-    {
-      date: '2026-05-13',
-      buys: [
-        {fund: 'ARKK', ticker: 'NTRA', amount: '$1.4M', price: '$186', shares: '7,526', pct: '1.69%'},
-        {fund: 'ARKG', ticker: 'NTRA', amount: '$2.1M', price: '$186', shares: '11,290', pct: '4.44%'},
-      ],
-      sells: [
-        {fund: 'ARKK', ticker: 'TWST', amount: '$236.4K', price: '$49', shares: '4,824', pct: '0.14%'},
-        {fund: 'ARKG', ticker: 'ADPT', amount: '$166.9K', price: '$13', shares: '12,838', pct: '0.63%'},
-        {fund: 'ARKG', ticker: 'TWST', amount: '$568.4K', price: '$49', shares: '11,600', pct: '0.58%'},
-        {fund: 'ARKG', ticker: 'CDNA', amount: '$353.9K', price: '$20', shares: '17,695', pct: '0.90%'},
-      ]
-    },
-    {
-      date: '2026-05-12',
-      buys: [
-        {fund: 'ARKK', ticker: 'NTLA', amount: '$590.4K', price: '$14', shares: '42,171', pct: '0.38%'},
-        {fund: 'ARKK', ticker: 'NTRA', amount: '$690.9K', price: '$186', shares: '3,714', pct: '0.89%'},
-      ],
-      sells: [
-        {fund: 'ARKK', ticker: 'TWST', amount: '$2.9M', price: '$49', shares: '59,183', pct: '1.61%'},
-      ]
-    },
+    {date:'2026-05-19',
+      buys:[{fund:'ARKK',ticker:'NTRA',amount:'$2.8M'},{fund:'ARKG',ticker:'NTRA',amount:'$1.2M'},{fund:'ARKK',ticker:'RXRX',amount:'$450K'}],
+      sells:[{fund:'ARKK',ticker:'TSM',amount:'$15.2M'},{fund:'ARKK',ticker:'TER',amount:'$10.1M'},{fund:'ARKW',ticker:'TSM',amount:'$4.8M'},{fund:'ARKW',ticker:'AMD',amount:'$3.2M'},{fund:'ARKG',ticker:'TWST',amount:'$128K'}]},
+    {date:'2026-05-15',
+      sells:[{fund:'ARKK',ticker:'TER',amount:'$12.6M'},{fund:'ARKK',ticker:'TSM',amount:'$18.5M'},{fund:'ARKK',ticker:'TWST',amount:'$816.3K'},{fund:'ARKW',ticker:'AMD',amount:'$5.8M'},{fund:'ARKW',ticker:'TSM',amount:'$5.8M'},{fund:'ARKG',ticker:'TWST',amount:'$59.4K'},{fund:'ARKG',ticker:'CDNA',amount:'$132.2K'}]},
+    {date:'2026-05-14',
+      sells:[{fund:'ARKK',ticker:'TWST',amount:'$564.1K'},{fund:'ARKK',ticker:'TSM',amount:'$11.6M'},{fund:'ARKK',ticker:'TER',amount:'$8.1M'},{fund:'ARKW',ticker:'TSM',amount:'$4.9M'},{fund:'ARKW',ticker:'AMD',amount:'$5.1M'},{fund:'ARKG',ticker:'TWST',amount:'$67.2K'},{fund:'ARKG',ticker:'ADPT',amount:'$465.0K'},{fund:'ARKG',ticker:'CDNA',amount:'$282.6K'}]},
+    {date:'2026-05-13',
+      buys:[{fund:'ARKK',ticker:'NTRA',amount:'$1.4M'},{fund:'ARKG',ticker:'NTRA',amount:'$2.1M'}],
+      sells:[{fund:'ARKK',ticker:'TWST',amount:'$236.4K'},{fund:'ARKG',ticker:'ADPT',amount:'$166.9K'},{fund:'ARKG',ticker:'TWST',amount:'$568.4K'},{fund:'ARKG',ticker:'CDNA',amount:'$353.9K'}]},
+    {date:'2026-05-12',
+      buys:[{fund:'ARKK',ticker:'NTLA',amount:'$590.4K'},{fund:'ARKK',ticker:'NTRA',amount:'$690.9K'}],
+      sells:[{fund:'ARKK',ticker:'TWST',amount:'$2.9M'}]}
   ]
-,
-  leopold_aschenbrenner: {
-    name: 'Leopold Aschenbrenner (SAF)',
-    fund: 'Situational Awareness LP',
-    portfolio_value: '$10B+',
-    positions: 25,
-    top_buys: [
-      {ticker:'BE',amount:'$879M'},{ticker:'SNDK',amount:'$724M'},{ticker:'CRWV',amount:'$556M'},
-      {ticker:'IREN',amount:'$401M'},{ticker:'CORZ',amount:'$389M'},{ticker:'CLSK',amount:'+648%'},
-      {ticker:'RIOT',amount:'+87%'},{ticker:'TE',amount:'new'},{ticker:'SHAZ',amount:'new'},
-      {ticker:'HIVE',amount:'new'}
-    ],
-    top_sells: [
-      {ticker:'NVDA (Put)',amount:'$1.57B'},{ticker:'AVGO (Put)',amount:'$1.01B'},
-      {ticker:'AMD (Put)',amount:'$969M'},{ticker:'MU (Put)',amount:'$584M'},
-      {ticker:'TSM (Put)',amount:'$535M'},{ticker:'ORCL (Put)',amount:'$1.07B'},
-      {ticker:'SMH (Put)',amount:'$2.04B'},
-      {ticker:'LITE',amount:'-$479M (清仓)'},{ticker:'INTC Call',amount:'-$747M (清仓)'}
-    ],
-    last_updated: '2026-Q1'
-  }
 };
