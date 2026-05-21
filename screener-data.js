@@ -558,7 +558,7 @@ const ARK_DATA = {
   lastUpdated: '2026-05-21 10:22',
   recentDays: [
     {date:'2026-05-19',
-      buys:[{fund:'ARKK',ticker:'NTRA',amount:'$2.8M'},{fund:'ARKG',ticker:'NTRA',amount:'$1.2M'},{fund:'ARKK',ticker:'RXRX',amount:'$450K'}],
+      buys:[{fund:'ARKK',ticker:'NTRA',amount:'$2.8M'},{fund:'ARKG',ticker:'NTRA',amount:'$1.2M'},{fund:'ARKK',ticker:'RXRX',amount:'$450K'},{fund:'ARKK',ticker:'BLSH',amount:'$1.7M'},{fund:'ARKW',ticker:'BLSH',amount:'$499K'},{fund:'ARKF',ticker:'BLSH',amount:'$230K'}],
       sells:[{fund:'ARKK',ticker:'TSM',amount:'$15.2M'},{fund:'ARKK',ticker:'TER',amount:'$10.1M'},{fund:'ARKW',ticker:'TSM',amount:'$4.8M'},{fund:'ARKW',ticker:'AMD',amount:'$3.2M'},{fund:'ARKG',ticker:'TWST',amount:'$128K'}]},
     {date:'2026-05-15',
       sells:[{fund:'ARKK',ticker:'TER',amount:'$12.6M'},{fund:'ARKK',ticker:'TSM',amount:'$18.5M'},{fund:'ARKK',ticker:'TWST',amount:'$816.3K'},{fund:'ARKW',ticker:'AMD',amount:'$5.8M'},{fund:'ARKW',ticker:'TSM',amount:'$5.8M'},{fund:'ARKG',ticker:'TWST',amount:'$59.4K'},{fund:'ARKG',ticker:'CDNA',amount:'$132.2K'}]},
